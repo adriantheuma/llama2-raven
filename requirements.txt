@@ -5,3 +5,8 @@ sentencepiece
 accelerate
 trl
 peft
+bitsandbytes
+scipy
+evaluate
+scikit-learn
+gradio
