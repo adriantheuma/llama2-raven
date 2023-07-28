@@ -29,7 +29,7 @@ except:  # noqa: E722
 
 def main(
     load_8bit: bool = True,
-    base_model: str = "meta-llama/Llama-2-7b-hf",
+    base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     lora_weights: str = "unwilledset/raven-model",
     lora_weights_version: str = "",
     prompt_template: str = "alpaca_short",  # The prompt template to use, will default to alpaca.
@@ -38,7 +38,7 @@ def main(
     device_map: str = "auto",
     load_in_8bit: bool = True,
     load_in_4bit: bool = False,
-    use_peft: bool = True,
+    use_peft: bool = False,
 ):
     base_model = base_model or os.environ.get("BASE_MODEL", "")
     assert (
@@ -186,7 +186,7 @@ def main(
             """
             <p style="text-align: center;">
                 Raven is a 7B-parameter <a href="https://ai.meta.com/llama/">LLaMA 2 model</a> finetuned to follow instructions in the finance domain. <br/>
-                It is trained on the <a href="https://github.com/tatsu-lab/stanford_alpaca">Stanford Alpaca</a> dataset and several <a href="https://huggingface.co/datasets/unwilledset/raven-data/viewer/dataset-2/train">other finance datasets</a>. For more information, please visit <a href="https://github.com/adriantheuma/fin-expert">the project's website</a>.  
+                It is trained on the <a href="https://github.com/tatsu-lab/stanford_alpaca">Stanford Alpaca</a> dataset and several <a href="https://huggingface.co/datasets/unwilledset/raven-data/viewer/dataset-3/train">other finance datasets</a>. For more information, please visit <a href="https://github.com/adriantheuma/fin-expert">the project's website</a>.  
             </p>
             """
         )

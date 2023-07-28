@@ -3,6 +3,9 @@ import fire
 import sys
 import os
 import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 import torch
 from datasets import load_dataset
@@ -34,22 +37,22 @@ from utils.prompter import Prompter
 
 def train(
     # data params
-    base_model: str = "meta-llama/Llama-2-7b-hf",
+    base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-2",
+    dataset_subset: str = "dataset-3",
     dataset_split: str = "train",
     output_dir: str = "weights",
     logging_dir: str = "logs",
     
     # training/ model hyperparams
-    per_device_train_batch_size: int = 4,
-    per_device_eval_batch_size: int = 4,
-    gradient_accumulation_steps: int = 16,
+    per_device_train_batch_size: int = 16,
+    per_device_eval_batch_size: int = 16,
+    gradient_accumulation_steps: int = 8,
     
     # batch_size: int = 64,
     # micro_batch_size: int = 4,
     num_train_epochs: int = 3,
-    learning_rate: float = 1.41e-5,
+    learning_rate: float = 3e-4,
     val_set_size: int = 0.1, # 10%
     logging_steps: int = 1,
     optim: str = "adamw_torch",
@@ -76,7 +79,7 @@ def train(
     # tokenizer settiongs
     train_on_inputs: bool = True,  # if False, masks out inputs in loss
     add_eos_token: bool = True,
-    max_length: int = 1024,
+    max_length: int = 512,
     
     
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
@@ -232,6 +235,14 @@ def train(
         train_data = dataset["train"].shuffle().map(generate_and_tokenize_prompt)
         val_data = None
 
+    # lengths = []
+    # for data in train_data:
+    #     lengths.append(len(data["input_ids"]))
+
+    # plt.hist(lengths, bins=50)
+    # plt.gca().set(title='Frequency Histogram', ylabel='Frequency')
+    # plt.show()
+
     training_args = TrainingArguments(
         per_device_train_batch_size=per_device_train_batch_size,
         per_device_eval_batch_size=per_device_eval_batch_size,
@@ -248,7 +259,7 @@ def train(
         save_steps=save_steps,
         output_dir=output_dir,
         logging_dir=logging_dir,
-        save_total_limit=3,
+        save_total_limit=5,
         load_best_model_at_end=True if val_set_size > 0 else False,
         group_by_length=group_by_length,
     )
@@ -285,15 +296,13 @@ def train(
     
     model = torch.compile(model)
 
-    train_result = trainer.train()
+    # start training
+    trainer.train()
     
+    # save the model
     model.save_pretrained(output_dir)
 
-    # save train results
-    # metrics = train_result.metrics
-    # trainer.log_metrics("train", metrics)
-    # trainer.save_metrics("train", metrics)
-
+    # log the results
     log_history = pd.DataFrame(trainer.state.log_history)
     log_history.to_csv(os.path.join(logging_dir, "logs.csv"))
 

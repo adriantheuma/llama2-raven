@@ -10,3 +10,4 @@ scipy
 evaluate
 scikit-learn
 gradio
+seaborn
