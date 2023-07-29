@@ -1,0 +1,8 @@
+{
+    "description": "A shorter template to experiment with.",
+    "prompt_input": "### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n{response}",
+    "prompt_input_derivation": "### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n{response}\n\n### Derivation:\n{derivation}",
+    "prompt_no_input": "### Instruction:\n{instruction}\n\n### Response:\n{response}",
+    "prompt_no_input_derivation": "### Instruction:\n{instruction}\n\n### Response:\n{response}\n\n###Derivation:{derivation}",
+    "response_split": "### Response:"    
+}

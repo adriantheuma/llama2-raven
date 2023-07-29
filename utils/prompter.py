@@ -29,22 +29,61 @@ class Prompter(object):
         self,
         instruction: str,
         input: Union[None, str] = None,
-        label: Union[None, str] = None,
+        response: Union[None, str] = None,
+        derivation: Union[None, str] = None,
     ) -> str:
         # returns the full prompt from instruction and optional input
         # if a label (=response, =output) is provided, it's also appended.
-        if input:
-            res = self.template["prompt_input"].format(
-                instruction=instruction, input=input
-            )
-        else:
-            res = self.template["prompt_no_input"].format(
-                instruction=instruction
-            )
-        if label:
-            res = f"{res}{label}"
-        if self._verbose:
-            print(res)
+
+        if input and derivation:
+            template_name = "prompt_input_derivation" 
+        elif input and not derivation:
+            template_name = "prompt_input" 
+        elif not input and derivation:
+            template_name="prompt_no_input_derivation" 
+        else: 
+            template_name="prompt_no_input" 
+
+
+        res = self.template[template_name].format(
+                        instruction=instruction, 
+                        input=input, 
+                        response=response,
+                        derivation=derivation,
+        )
+
+        # if input:
+        #     if derivation:
+        #         res = self.template["prompt_input_derivation"].format(
+        #             instruction=instruction, 
+        #             input=input, 
+        #             response=response,
+        #             derivation=derivation,
+        #         )
+        #     else:
+        #         res = self.template["prompt_input"].format(
+        #             instruction=instruction, 
+        #             input=input,
+        #             response=response,
+        #             derivation=derivation,
+        #         )
+        # else:
+        #     if derivation:
+        #         res = self.template["prompt_no_input_derivation"].format(
+        #             instruction=instruction,
+        #             response=response,
+        #             derivation=derivation,
+        #         )
+        #     else:
+        #         res = self.template["prompt_no_input"].format(
+        #             instruction=instruction,
+        #             response=response,
+        #     )
+
+        # if label:
+        #     res = f"{res}{label}"
+        # if self._verbose:
+        #     print(res)
         return res
 
     def get_response(self, output: str) -> str:
