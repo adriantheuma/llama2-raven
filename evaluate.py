@@ -2,6 +2,7 @@ import os
 import sys
 import json
 from tqdm import tqdm, trange
+from datetime import datetime
 
 import fire
 import gradio as gr
@@ -45,6 +46,7 @@ def main(
     top_k: int = 10,
     num_beams: int = 2,
     max_new_tokens: int = 128,
+    report_every_steps: int = 100
 ):
    
 
@@ -108,6 +110,67 @@ def main(
     model.eval()
     model = torch.compile(model)
 
+    # Load the dataset
+    dataset = load_dataset(
+        path=dataset_name, 
+        name=dataset_subset,        
+        split=dataset_split,
+        download_mode=download_mode
+    )
+
+    # dataset = dataset.select(range(0,15))
+
+    def save_evaluation_results(prediction_results, console_output: bool = False):
+        results_dict = {}
+        total_num_match = 0
+        total_num_samples = 0
+
+        for source in prediction_results:
+            num_match = sum(res["exact_match"] for res in prediction_results[source])
+            num_samples = len(prediction_results[source])
+            results_dict.setdefault(source, {})
+            results_dict[source] = {
+                "num_samples": num_samples,
+                "num_match": num_match,
+                "accuracy": num_match / num_samples,
+            }
+            total_num_match += num_match
+            total_num_samples += num_samples
+
+        results_dict["overall"] = {
+            "num_samples": total_num_samples,
+            "num_match": total_num_match,
+            "accuracy": total_num_match / total_num_samples,
+        }
+
+        eval_dict = {
+            "base_model_config": base_config,
+            "lora_config": lora_config,
+            "evaluation_config": generation_config_dict,
+            "results": results_dict,
+            "predictions": prediction_results
+        }
+
+        if console_output:
+            print(results_dict)
+        else:
+            save_location = str.format(
+                f"{evaluation_dir}/{base_config['_name_or_path']}/{lora_config['peft_type']}/{lora_config['r']}/{dataset_subset}"
+            )
+
+            dir_name = os.path.dirname(save_location)
+            if not os.path.exists(dir_name):
+                os.makedirs(dir_name)
+
+            now = datetime.now()
+            filename = f"results_{now.strftime('%Y%m%d_%H%M%S')}.json"    
+            path = os.path.join(evaluation_dir, filename)
+
+            # save the fule
+            with open(path, "w") as f:
+                json.dump(eval_dict, f, indent=4)
+
+    
     def evaluate(
         instruction,
         input=None,
@@ -129,21 +192,13 @@ def main(
     
         return prompter.get_response(output)
 
-    # Load the dataset
-    dataset = load_dataset(
-        path=dataset_name, 
-        name=dataset_subset,        
-        split=dataset_split,
-        download_mode=download_mode
-    )
 
-    # dataset = dataset.select(range(0,20))
-
-    evaluation_results = []
+    prediction_results = {}
 
     pbar = tqdm(desc="Evaluating test samples", total=dataset.num_rows)
+    steps = 0
 
-    for sample in dataset:
+    for sample in dataset:        
         prediction = evaluate(
             instruction=sample["instruction"], 
             input=sample["input"],
@@ -152,7 +207,9 @@ def main(
 
         prediction = prediction.strip().replace("</s>", "")
 
-        evaluation_results.append({
+        prediction_results.setdefault(sample["source"], [])
+
+        prediction_results[sample["source"]].append({
                 "instruction": sample["instruction"],
                 "input": sample["input"],
                 "prediction": prediction,
@@ -161,29 +218,12 @@ def main(
             }
         )
         pbar.update()
-    
-    num_match = sum(res["exact_match"] for res in evaluation_results)
-    results_dict ={
-        "num_samples": dataset.num_rows,
-        "num_match": num_match,
-        "accuracy": num_match / dataset.num_rows,
-    }
+        
+        steps+=1
+        if steps % report_every_steps == 0: 
+            save_evaluation_results(prediction_results, console_output=True)
 
-
-    eval_dict = {
-        "base_model_config": base_config,
-        "lora_config": lora_config,
-        "evaluation_config": generation_config_dict,
-        "results": results_dict,
-        "evaluation": evaluation_results
-    }
-
-    path = os.path.join(evaluation_dir, "evaluation_results.json")
-
-    # save the fule
-    with open(path, "w") as f:
-        json.dump(eval_dict, f)
-
+    save_evaluation_results(prediction_results, console_output=False)
 
 if __name__ == "__main__":
     fire.Fire(main)
