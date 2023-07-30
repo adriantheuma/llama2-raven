@@ -38,17 +38,18 @@ def train(
     # data params
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-4",
+    dataset_subset: str = "dataset-5",
     dataset_split: str = "train",
-    download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
+    download_mode: str = "force_redownload", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
     prompt_template_name: str = "alpaca_short_derivation",  # The prompt template to use, will default to alpaca.
     
     # training/ model hyperparams
-    per_device_train_batch_size: int = 8,
-    per_device_eval_batch_size: int = 8,
-    gradient_accumulation_steps: int = 8,
+    # batch size = per_device_batch_size * gradient_accumulation_steps
+    per_device_train_batch_size: int = 4,
+    per_device_eval_batch_size: int = 4,
+    gradient_accumulation_steps: int = 32, 
     
     num_train_epochs: int = 3,
     learning_rate: float = 3e-4,
@@ -79,8 +80,7 @@ def train(
     train_on_inputs: bool = True,  # if False, masks out inputs in loss
     add_eos_token: bool = True,
     max_length: int = 512,
-    
-    
+        
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
 ):
     print(

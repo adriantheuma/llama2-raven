@@ -1,16 +1,12 @@
 import os
-import sys
 import json
-from tqdm import tqdm, trange
+from tqdm import tqdm
 from datetime import datetime
 
 import fire
-import gradio as gr
 import torch
-import transformers
-from peft import PeftModel, LoraConfig
+from peft import PeftModel
 from datasets import load_dataset
-
 
 from transformers import (
     GenerationConfig, 
@@ -20,7 +16,6 @@ from transformers import (
     BitsAndBytesConfig, 
 ) 
 
-from utils.callbacks import Iteratorize, Stream
 from utils.prompter import Prompter
 
 
@@ -39,13 +34,13 @@ def main(
     device_map: str = "auto",
     load_in_8bit: bool = True,
     load_in_4bit: bool = False,
-    use_peft: bool = True,
+    use_peft: bool = False,
     evaluation_dir: str = "evaluation",
     temperature: float = 0.1,
     top_p: float = 0.75,
     top_k: int = 10,
     num_beams: int = 2,
-    max_new_tokens: int = 128,
+    max_new_tokens: int = 512,
     report_every_steps: int = 100
 ):
    
@@ -75,8 +70,9 @@ def main(
         torch_dtype=torch_dtype,
         use_auth_token=True,
     )   
+    base_config = AutoConfig.from_pretrained(base_model).to_dict()
 
-
+    lora_config = {}
     if use_peft:
         model = PeftModel.from_pretrained(
             model,
@@ -85,9 +81,8 @@ def main(
             device_map=device_map,
             force_download=force_download,
         )
+        lora_config = model.peft_config["default"].to_dict()    
     
-    base_config = AutoConfig.from_pretrained(base_model).to_dict()
-    lora_config = model.peft_config["default"].to_dict()
     
     generation_config_dict = {
         "temperature": temperature,
@@ -164,7 +159,7 @@ def main(
 
             now = datetime.now()
             filename = f"results_{now.strftime('%Y%m%d_%H%M%S')}.json"    
-            path = os.path.join(evaluation_dir, filename)
+            path = os.path.join(save_location, filename)
 
             # save the fule
             with open(path, "w") as f:
