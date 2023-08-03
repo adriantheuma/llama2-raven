@@ -87,4 +87,11 @@ class Prompter(object):
         return res
 
     def get_response(self, output: str) -> str:
-        return output.split(self.template["response_split"])[1].strip()
+        return output.split(self.template["response_split"])[1].replace("</s>", "").strip()
+
+    def get_response_for_evaluation(self, output: str) -> str:
+        response_split = self.template["response_split"]
+        derivation_split = self.template["derivation_split"]
+        out = output.split(response_split)[1].split(derivation_split)[0].replace("</s>", "").strip()
+        return out
+        

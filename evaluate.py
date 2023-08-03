@@ -23,18 +23,18 @@ device = "cuda"
 
 def main(
     load_8bit: bool = True,
-    base_model: str = "meta-llama/Llama-2-7b-hf",
-    lora_weights: str = "unwilledset/raven-model",
+    base_model: str = "meta-llama/Llama-2-13b-chat-hf",
+    lora_weights: str = "unwilledset/raven-13b-chat-d5",
     force_download: bool = False,
     prompt_template: str = "alpaca_short",  # The prompt template to use, will default to alpaca.
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-4",
+    dataset_subset: str = "dataset-5",
     dataset_split: str = "test",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     device_map: str = "auto",
     load_in_8bit: bool = True,
     load_in_4bit: bool = False,
-    use_peft: bool = False,
+    use_peft: bool = True,
     evaluation_dir: str = "evaluation",
     temperature: float = 0.1,
     top_p: float = 0.75,
@@ -185,7 +185,7 @@ def main(
         s = generation_output.sequences[0]
         output = tokenizer.decode(s)
     
-        return prompter.get_response(output)
+        return prompter.get_response_for_evaluation(output)
 
 
     prediction_results = {}
@@ -199,8 +199,6 @@ def main(
             input=sample["input"],
             generation_config_dict=generation_config_dict
         )
-
-        prediction = prediction.strip().replace("</s>", "")
 
         prediction_results.setdefault(sample["source"], [])
 

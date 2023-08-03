@@ -81,7 +81,7 @@ def train(
     add_eos_token: bool = True,
     max_length: int = 512,
         
-    resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
+    resume_from_checkpoint: str = "weights/checkpoint-1200",  # either training checkpoint or final adapter
 ):
     print(
         f"Training model with params:\n\n"
@@ -260,7 +260,7 @@ def train(
         logging_dir=logging_dir,
         save_total_limit=5,
         load_best_model_at_end=True if val_set_size > 0 else False,
-        group_by_length=group_by_length,
+        group_by_length=group_by_length
     )
 
 
@@ -296,7 +296,7 @@ def train(
     model = torch.compile(model)
 
     # start training
-    trainer.train()
+    trainer.train(resume_from_checkpoint=resume_from_checkpoint)
     
     # save the model
     model.save_pretrained(output_dir)
