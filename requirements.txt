@@ -11,3 +11,4 @@ evaluate
 scikit-learn
 gradio
 seaborn
+torch-tb-profiler
