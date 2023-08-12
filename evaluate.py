@@ -25,6 +25,7 @@ def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     lora_weights: str = "unwilledset/raven-13b-chat-d5",
+    inference_mode: bool = True,
     force_download: bool = False,
     prompt_template: str = "alpaca_short",  # The prompt template to use, will default to alpaca.
     dataset_name: str = "unwilledset/raven-data",
@@ -41,7 +42,7 @@ def main(
     top_k: int = 10,
     num_beams: int = 2,
     max_new_tokens: int = 512,
-    report_every_steps: int = 100
+    report_every_steps: int = 20
 ):
    
 
@@ -80,6 +81,7 @@ def main(
             torch_dtype=torch.float16,
             device_map=device_map,
             force_download=force_download,
+            inference_mode=inference_mode,
         )
         lora_config = model.peft_config["default"].to_dict()    
     
@@ -170,7 +172,7 @@ def main(
         instruction,
         input=None,
         generation_config_dict: dict = {}
-    ):
+    ) -> dict:
         prompt = prompter.generate_prompt(instruction, input)
         inputs = tokenizer(prompt, return_tensors="pt")
         input_ids = inputs["input_ids"].to(device)
@@ -205,9 +207,12 @@ def main(
         prediction_results[sample["source"]].append({
                 "instruction": sample["instruction"],
                 "input": sample["input"],
-                "prediction": prediction,
+                "predicted_response": prediction["response"],
+                "predicted_derivation": prediction["derivation"],
                 "gold": sample["output"],
-                "exact_match": 1 if prediction == sample["output"] else 0,                
+                "derivation": sample["derivation"],
+                "response_match": 1 if prediction["response"] == sample["output"] else 0,                
+                "derivation_match": 1 if prediction["derivation"] == sample["derivation"] and prediction["derivation"] != None else 0,   
             }
         )
         pbar.update()
