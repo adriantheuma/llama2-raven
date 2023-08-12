@@ -38,9 +38,9 @@ def train(
     # data params
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-5",
+    dataset_subset: str = "dataset-6",
     dataset_split: str = "train",
-    download_mode: str = "force_redownload", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
+    download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
     prompt_template_name: str = "alpaca_short_derivation",  # The prompt template to use, will default to alpaca.
@@ -51,7 +51,7 @@ def train(
     per_device_eval_batch_size: int = 4,
     gradient_accumulation_steps: int = 32, 
     
-    num_train_epochs: int = 3,
+    num_train_epochs: int = 10,
     learning_rate: float = 3e-4,
     val_set_size: int = 0.1, # 10%
     logging_steps: int = 1,
@@ -81,7 +81,7 @@ def train(
     add_eos_token: bool = True,
     max_length: int = 512,
         
-    resume_from_checkpoint: str = "weights/checkpoint-1200",  # either training checkpoint or final adapter
+    resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
 ):
     print(
         f"Training model with params:\n\n"
@@ -150,8 +150,10 @@ def train(
         full_prompt = prompter.generate_prompt(
             instruction=data_point["instruction"],
             input=data_point["input"],
+            data=data_point["data"],
             response=data_point["output"],
-            derivation=data_point["derivation"],
+            derivation_eval=data_point["derivation_eval"],
+            derivation_sql=data_point["derivation_sql"],
         )
 
         # tokenize and return    
