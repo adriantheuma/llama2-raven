@@ -32,7 +32,8 @@ except:  # noqa: E722
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d5",
+    lora_weights: str = "unwilledset/raven-13b-chat-d6",
+    force_download: bool = False,
     lora_weights_version: str = "",
     prompt_template: str = "alpaca_short",  # The prompt template to use, will default to alpaca.
     server_name: str = "0.0.0.0",  # Allows to listen on all interfaces by providing '0.
@@ -41,7 +42,7 @@ def main(
     load_in_8bit: bool = True,
     load_in_4bit: bool = False,
     use_peft: bool = True,
-    load_model: bool = False
+    load_model: bool = True
 ):
     prompter = Prompter(prompt_template)
     
@@ -83,7 +84,7 @@ def main(
                 lora_weights,
                 torch_dtype=torch.float16,
                 device_map=device_map,
-                force_download=True,
+                force_download=force_download,
             )
     
         # unwind broken decapoda-research config
@@ -182,7 +183,6 @@ def main(
 
                     if output[-1] in [tokenizer.eos_token_id]:
                         break
-
                     yield prompter.get_response(decoded_output)
             return  # early return for stream_output
 
@@ -259,6 +259,11 @@ def main(
                     
             with gr.Column(scale=44):
                 with gr.Row(variant="panel"):    
+                    raw_out = gr.inputs.Textbox(
+                        lines=2,
+                        label="Raw output",
+                    )
+                with gr.Row(variant="panel"):    
                     response_out = gr.inputs.Textbox(
                         lines=2,
                         label="Response",
@@ -305,10 +310,10 @@ def main(
         
         # list of inputs and outputs
         inputs = [instruction, input, data, temperature, top_k, top_p, beams, max_tokens, stream]
-        outputs = [response_out, eval_out, result_out]
+        outputs = [raw_out, response_out, eval_out, result_out]
         
         # clear button setup
-        components_to_clear = [instruction, input, response_out, eval_out, result_out]
+        components_to_clear = [instruction, input] + outputs
         clear_btn.add(components=components_to_clear)
 
         # submit on click 

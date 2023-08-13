@@ -38,12 +38,12 @@ def train(
     # data params
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-6",
+    dataset_subset: str = "dataset-7",
     dataset_split: str = "train",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
-    prompt_template_name: str = "alpaca_short_derivation",  # The prompt template to use, will default to alpaca.
+    prompt_template_name: str = "raven_prompt_template",  # The prompt template to use, will default to alpaca.
     
     # training/ model hyperparams
     # batch size = per_device_batch_size * gradient_accumulation_steps
@@ -51,7 +51,7 @@ def train(
     per_device_eval_batch_size: int = 4,
     gradient_accumulation_steps: int = 32, 
     
-    num_train_epochs: int = 10,
+    num_train_epochs: int = 5,
     learning_rate: float = 3e-4,
     val_set_size: int = 0.1, # 10%
     logging_steps: int = 1,
@@ -147,13 +147,14 @@ def train(
     def generate_and_tokenize_prompt(data_point):
         
         # generate the prompt using the selected template
-        full_prompt = prompter.generate_prompt(
+        full_prompt = prompter.generate_training_prompt(
             instruction=data_point["instruction"],
             input=data_point["input"],
             data=data_point["data"],
             response=data_point["output"],
             derivation_eval=data_point["derivation_eval"],
             derivation_sql=data_point["derivation_sql"],
+            template=data_point["template"],
         )
 
         # tokenize and return    

@@ -1,0 +1,36 @@
+{
+    "description": "This prompt template contain multiple styles to be used for different data scenarios",
+    "generic": {
+        "description": "Generic template",
+        "input_prompt": "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
+        "default_prompt": "Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Response:\n",
+        "response_split": "### Response:"    
+    },
+    "script": {
+        "description": "SQL template",
+        "full_prompt": "Below is an instruction that describes a task, coupled with input and contextual data. Compose an SQL script capable of being run on the data to generate the solution.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### SQL:\n",
+        "data_prompt": "Below is an instruction that describes a task, coupled with contextual data. Compose an SQL script capable of being run on the data to generate the solution.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### SQL:\n",
+        "response_split": "### SQL:"
+    },
+    "arithmetic": {
+        "description": "Arithmetic template",
+        "full_prompt": "Below is an instruction that describes a task, coupled with input and data providing additional context. Formulate an arithmetic equation to generate the answer.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Equation:\n",
+        "data_prompt": "Below is an instruction that describes a task, coupled with data providing additional context. Formulate an arithmetic equation to generate the answer.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Equation:\n",
+        "response_split": "### Equation:"
+    },
+    "table": {
+        "description": "Generic table template",
+        "full_prompt": "Here is a instruction detailing a task, accompanied by input and data providing additional context. Provide a suitable reply that effectively fulfills the inquiry.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Response:\n",
+        "input_prompt": "Here is a instruction detailing a task, accompanied by input providing additional information. Provide a suitable reply that effectively fulfills the inquiry.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
+        "data_prompt": "Here is a instruction detailing a task, accompanied by data providing additional context. Provide a suitable reply that effectively fulfills the inquiry.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
+        "response_split": "### Response:"
+    },
+    "template": {
+        "description": "Choose the right template",
+        "full_prompt": "Here is a instruction, input and data detailing a task. Which template is best suited to fulfil this inquiry.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Template:\n",
+        "data_prompt": "Here is a instruction and data detailing a task. Which template is best suited to fulfil this inquiry.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Template:\n",
+        "input_prompt": "Here is a instruction and input detailing a task. Which template is best suited to fulfil this inquiry.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Template:\n",
+        "default_prompt": "Here is a instruction detailing a task. Which template is best suited to fulfil this inquiry.\n\n### Instruction:\n{instruction}\n\n### Template:\n",
+        "response_split": "### Template:"
+    }
+}
