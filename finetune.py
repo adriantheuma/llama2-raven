@@ -38,9 +38,9 @@ def train(
     # data params
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-7",
+    dataset_subset: str = "dataset-8",
     dataset_split: str = "train",
-    download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
+    download_mode: str = "force_redownload", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
     prompt_template_name: str = "raven_prompt_template",  # The prompt template to use, will default to alpaca.
@@ -239,12 +239,14 @@ def train(
         val_data = None
 
     # get all the lengths and flatten
-    # select only those less than 1024 in length after tokenisation
     lengths = [item for sublist in val_data["length"] for item in sublist]
+    # select only those less than 1024 in length after tokenisation
     idx = (np.asarray(lengths) < 1024).nonzero()[0]
     val_data = val_data.select(idx)
 
+    # get all the lengths and flatten
     lengths = [item for sublist in train_data["length"] for item in sublist]
+    # select only those less than 1024 in length after tokenisation
     idx = (np.asarray(lengths) < 1024).nonzero()[0]
     train_data = train_data.select(idx)
 
