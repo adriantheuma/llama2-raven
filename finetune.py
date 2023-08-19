@@ -18,7 +18,7 @@ from transformers import (
     DataCollatorForSeq2Seq, 
     Trainer
 )
-import evaluate
+import evaluate_raven
 import pandas as pd
 
 # from trl import SFTTrainer
@@ -47,9 +47,9 @@ def train(
     
     # training/ model hyperparams
     # batch size = per_device_batch_size * gradient_accumulation_steps
-    per_device_train_batch_size: int = 4,
-    per_device_eval_batch_size: int = 4,
-    gradient_accumulation_steps: int = 32, 
+    per_device_train_batch_size: int = 2,
+    per_device_eval_batch_size: int = 2,
+    gradient_accumulation_steps: int = 64, 
     
     num_train_epochs: int = 5,
     learning_rate: float = 3e-4,
@@ -79,7 +79,7 @@ def train(
     # tokenizer settiongs
     train_on_inputs: bool = True,  # if False, masks out inputs in loss
     add_eos_token: bool = True,
-    max_length: int = 512,
+    max_length: int = 1024,
         
     resume_from_checkpoint: str = None,  # either training checkpoint or final adapter
 ):
@@ -136,6 +136,7 @@ def train(
             max_length=max_length,
             padding=False,
             return_tensors=None,
+            return_length=True
         )
 
         # labels and input ids are the same
@@ -236,6 +237,16 @@ def train(
     else:
         train_data = dataset["train"].shuffle().map(generate_and_tokenize_prompt)
         val_data = None
+
+    # get all the lengths and flatten
+    # select only those less than 1024 in length after tokenisation
+    lengths = [item for sublist in val_data["length"] for item in sublist]
+    idx = (np.asarray(lengths) < 1024).nonzero()[0]
+    val_data = val_data.select(idx)
+
+    lengths = [item for sublist in train_data["length"] for item in sublist]
+    idx = (np.asarray(lengths) < 1024).nonzero()[0]
+    train_data = train_data.select(idx)
 
     # lengths = []
     # for data in train_data:

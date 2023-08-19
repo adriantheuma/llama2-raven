@@ -2,11 +2,14 @@ import os
 import json
 from tqdm import tqdm
 from datetime import datetime
+from typing import Union
 
+import re
 import fire
 import torch
 from peft import PeftModel
 from datasets import load_dataset
+from evaluate import load
 
 from transformers import (
     GenerationConfig, 
@@ -19,17 +22,28 @@ from transformers import (
 from utils.prompter import Prompter
 
 
-device = "cuda"
+if torch.cuda.is_available():
+    device = "cuda"
+else:
+    device = "cpu"
+
+try:
+    if torch.backends.mps.is_available():
+        device = "mps"
+except:  # noqa: E722
+    pass
+
+bertscore = load("bertscore")
 
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d5",
+    lora_weights: str = "unwilledset/raven-13b-chat-d7",
     inference_mode: bool = True,
     force_download: bool = False,
-    prompt_template: str = "alpaca_short",  # The prompt template to use, will default to alpaca.
+    prompt_template: str = "raven_prompt_template", 
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-5",
+    dataset_subset: str = "dataset-7",
     dataset_split: str = "test",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     device_map: str = "auto",
@@ -41,8 +55,10 @@ def main(
     top_p: float = 0.75,
     top_k: int = 10,
     num_beams: int = 2,
-    max_new_tokens: int = 512,
-    report_every_steps: int = 20
+    max_new_tokens: int = 2048,
+    report_every_steps: int = 20,
+    add_eos_token: bool = True,
+    max_length: int = 1024,
 ):
    
 
@@ -61,6 +77,7 @@ def main(
         torch_dtype = None
 
     prompter = Prompter(prompt_template)
+    
     tokenizer = AutoTokenizer.from_pretrained(base_model)
     
     model = AutoModelForCausalLM.from_pretrained(
@@ -93,7 +110,7 @@ def main(
         "num_beams": num_beams,
         "max_new_tokens": max_new_tokens,
         "return_dict_in_generate": True,
-        "output_scores": True,                
+        # "output_scores": True,                
     }
 
     # unwind broken decapoda-research config
@@ -123,7 +140,7 @@ def main(
         total_num_samples = 0
 
         for source in prediction_results:
-            num_match = sum(res["exact_match"] for res in prediction_results[source])
+            num_match = sum(res["match"] for res in prediction_results[source])
             num_samples = len(prediction_results[source])
             results_dict.setdefault(source, {})
             results_dict[source] = {
@@ -150,78 +167,107 @@ def main(
 
         if console_output:
             print(results_dict)
-        else:
-            save_location = str.format(
-                f"{evaluation_dir}/{base_config['_name_or_path']}/{lora_config['peft_type']}/{lora_config['r']}/{dataset_subset}"
-            )
+        
+        save_location = str.format(
+            f"{evaluation_dir}/{base_config['_name_or_path']}/{lora_config['peft_type']}/{lora_config['r']}/{dataset_subset}"
+        )
 
-            dir_name = os.path.dirname(save_location)
-            if not os.path.exists(dir_name):
-                os.makedirs(dir_name)
+        dir_name = os.path.dirname(save_location)
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
 
-            now = datetime.now()
-            filename = f"results_{now.strftime('%Y%m%d_%H%M%S')}.json"    
-            path = os.path.join(save_location, filename)
+        now = datetime.now()
+        filename = f"results_{now.strftime('%Y%m%d_%H%M%S')}.json"    
+        path = os.path.join(save_location, filename)
 
-            # save the fule
-            with open(path, "w") as f:
-                json.dump(eval_dict, f, indent=4)
+        # save the fule
+        with open(path, "w") as f:
+            json.dump(eval_dict, f, indent=4)
 
     
     def evaluate(
-        instruction,
-        input=None,
+        instruction: str,
+        input: Union[None, str] = None,
+        data: Union[None, str] = None,
+        template: str = None,
         generation_config_dict: dict = {}
     ) -> dict:
-        prompt = prompter.generate_prompt(instruction, input)
-        inputs = tokenizer(prompt, return_tensors="pt")
-        input_ids = inputs["input_ids"].to(device)
-        
-        generation_config = GenerationConfig(**generation_config_dict)       
+                
+        prompt = prompter.generate_inference_prompt(instruction, input, data, template)
 
-        with torch.no_grad():
-            generation_output = model.generate(
-                input_ids=input_ids,
-                generation_config=generation_config,
-            )
-        s = generation_output.sequences[0]
-        output = tokenizer.decode(s)
-    
-        return prompter.get_response_for_evaluation(output)
+        inputs = tokenizer(
+            prompt, 
+            truncation=True,
+            max_length=max_length,
+            padding=False,
+            return_tensors="pt",
+            return_length=True
+        )
+        length = inputs["length"].item()    
+        if length <= 512:
+            input_ids = inputs["input_ids"].to(device)
+            generation_config = GenerationConfig(**generation_config_dict)       
+
+            with torch.no_grad():
+                generation_output = model.generate(
+                    input_ids=input_ids,
+                    generation_config=generation_config,
+                )
+            s = generation_output.sequences[0]
+            output = tokenizer.decode(s)
+
+            return prompter.get_response_for_evaluation(output=output, template=template)
+        else:
+            return {
+                "result": "not evaluated"
+            }
 
 
     prediction_results = {}
 
     pbar = tqdm(desc="Evaluating test samples", total=dataset.num_rows)
     steps = 0
-
+    
     for sample in dataset:        
+        instruction = sample["instruction"]
+        input = sample["input"]
+        data = sample["data"]
+        template = sample["template"]
+       
         prediction = evaluate(
-            instruction=sample["instruction"], 
-            input=sample["input"],
+            instruction=instruction, 
+            input=input,
+            data=data,
+            template=template,
             generation_config_dict=generation_config_dict
         )
 
-        prediction_results.setdefault(sample["source"], [])
+        if prediction["result"] != "not evaluated":
+            gold = sample["output"]
+            predicted = prediction["result"]
+        
+            bert_score = bertscore.compute(predictions=[predicted], references=[gold], lang="en")
+            
+            prediction_results.setdefault(sample["source"], [])
 
-        prediction_results[sample["source"]].append({
-                "instruction": sample["instruction"],
-                "input": sample["input"],
-                "predicted_response": prediction["response"],
-                "predicted_derivation": prediction["derivation"],
-                "gold": sample["output"],
-                "derivation": sample["derivation"],
-                "response_match": 1 if prediction["response"] == sample["output"] else 0,                
-                "derivation_match": 1 if prediction["derivation"] == sample["derivation"] and prediction["derivation"] != None else 0,   
-            }
-        )
+            prediction_results[sample["source"]].append({
+                    "instruction": instruction,
+                    "input": input,
+                    "predicted_response": predicted,
+                    "gold": gold,
+                    "match": 1 if predicted == gold else 0,
+                    "bert_f1": bert_score["f1"],
+                    "bert_precision": bert_score["precision"],
+                    "bert_recall": bert_score["recall"]
+                }
+            )
         pbar.update()
         
         steps+=1
         if steps % report_every_steps == 0: 
             save_evaluation_results(prediction_results, console_output=True)
 
-    save_evaluation_results(prediction_results, console_output=False)
+    save_evaluation_results(prediction_results, console_output=True)
 
 if __name__ == "__main__":
     fire.Fire(main)

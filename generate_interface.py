@@ -7,6 +7,8 @@ import gradio as gr
 import torch
 import transformers
 from peft import PeftModel
+from datasets import load_dataset
+
 from transformers import (
     GenerationConfig, 
     AutoModelForCausalLM, 
@@ -32,10 +34,15 @@ except:  # noqa: E722
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d6",
+    lora_weights: str = "unwilledset/raven-13b-chat-d7",
+    dataset_name: str = "unwilledset/raven-data",
+    dataset_subset: str = "dataset-7",
+    dataset_split: str = "test",
+    download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
+
     force_download: bool = False,
     lora_weights_version: str = "",
-    prompt_template: str = "alpaca_short",  # The prompt template to use, will default to alpaca.
+    prompt_template: str = "raven_prompt_template",  # The prompt template to use, will default to alpaca.
     server_name: str = "0.0.0.0",  # Allows to listen on all interfaces by providing '0.
     share_gradio: bool = False,
     device_map: str = "auto",
@@ -125,6 +132,31 @@ def main(
         yield (response, eval, result)
 
 
+
+    def which_prompt(
+        instruction,
+        input=None,
+        data=None,
+        generation_config=None,
+        max_new_tokens=128,
+    ):
+        prompt = prompter.generate_inference_prompt(instruction=instruction, input=input, data=data)
+
+        inputs = tokenizer(prompt, return_tensors="pt")
+        input_ids = inputs["input_ids"].to(device)
+        
+        with torch.no_grad():
+            generation_output = model.generate(
+                input_ids=input_ids,
+                generation_config=generation_config,
+                return_dict_in_generate=True,
+                output_scores=True,
+                max_new_tokens=max_new_tokens,
+            )
+        s = generation_output.sequences[0]
+        output = tokenizer.decode(s)
+        return prompter.get_response(output, template="template")
+
     def evaluate(
         instruction,
         input=None,
@@ -137,9 +169,7 @@ def main(
         stream_output=False,
         **kwargs,
     ):
-        prompt = prompter.generate_prompt(instruction=instruction, input=input, data=data)
-        inputs = tokenizer(prompt, return_tensors="pt")
-        input_ids = inputs["input_ids"].to(device)
+        
         generation_config = GenerationConfig(
             temperature=temperature,
             top_p=top_p,
@@ -148,6 +178,22 @@ def main(
             **kwargs,
         )
 
+        template, _, _, _ = which_prompt(
+            instruction=instruction,
+            input=input,
+            data=data,
+            generation_config=generation_config,
+            max_new_tokens=max_new_tokens,
+        )
+
+        if template not in ["generic", "script", "arithmetic", "table"]:
+            template = "generic"
+
+        prompt = prompter.generate_inference_prompt(instruction=instruction, input=input, data=data, template=template)
+        
+        inputs = tokenizer(prompt, return_tensors="pt")
+        input_ids = inputs["input_ids"].to(device)
+        
         generate_params = {
             "input_ids": input_ids,
             "generation_config": generation_config,
@@ -183,7 +229,7 @@ def main(
 
                     if output[-1] in [tokenizer.eos_token_id]:
                         break
-                    yield prompter.get_response(decoded_output)
+                    yield prompter.get_response(output=decoded_output, template=template)
             return  # early return for stream_output
 
         # Without streaming
@@ -195,9 +241,33 @@ def main(
                 output_scores=True,
                 max_new_tokens=max_new_tokens,
             )
+        
         s = generation_output.sequences[0]
         output = tokenizer.decode(s)
-        yield prompter.get_response(output)
+        
+        yield prompter.get_response(output=output, template=template)
+
+
+    
+
+    # Load the test dataset
+    dataset = load_dataset(
+        path=dataset_name, 
+        name=dataset_subset,        
+        split=dataset_split,
+        download_mode=download_mode
+    )
+
+    examples = [
+        [
+            d["instruction"],
+            d["input"],
+            d["data"],
+            d["output"]
+        ]
+        for d in dataset
+    ]
+
 
 
     demo = gr.Blocks(
@@ -234,8 +304,7 @@ def main(
                     instruction = gr.components.Textbox(
                         lines=2,
                         label="Instruction",                
-                        placeholder="What would you like to know?",
-                        value="Test instruction with some data"
+                        placeholder="What would you like to know?"
                     )
                 with gr.Row(variant="panel"):     
                     input = gr.components.Textbox(
@@ -248,35 +317,43 @@ def main(
                         lines=6, 
                         label="Table", 
                         placeholder=
-                            'Provide data related to the instruction. This needs to be in the following format to be interpreted correctly\n{\n\t"header": ["H1", "H2"],\n\t"rows": [["R1D1", "R1D2"], ["R2D1", "R2D2"]],\n\t"types: ["text", "text"]\n}',
-                        value='{"header": ["Date", "Result", "Score", "Stadium", "City", "Crowd"], "rows": [["13 June 1997", "Adelaide Rams def. Leeds Rhinos", "34-8", "Adelaide Oval", "Adelaide", "14,630"], ["13 June 1997", "Hunter Mariners def. Castleford Tigers", "42-12", "Wheldon Road", "Castleford", "3,087"], ["14 June 1997", "North Queensland Cowboys def. Oldham Bears", "54-16", "Stockland Stadium", "Townsville", "12,631"], ["14 June 1997", "Auckland Warriors def. Bradford Bulls", "20-16", "Odsal Stadium", "Bradford", "13,133"], ["15 June 1997", "Canterbury Bulldogs def. Halifax Blue Sox", "58-6", "Belmore", "Sydney", "5,034"], ["15 June 1997", "Canberra Raiders def. London Broncos", "66-20", "Bruce Stadium", "Canberra", "6,471"], ["15 June 1997", "Sheffield Eagles def. Perth Reds", "26-22", "Don Valley Stadium", "Sheffield", "3,000"], ["15 June 1997", "Penrith Panthers def. Warrington Wolves", "52-22", "Wilderspool", "Warrington", "3,850"], ["16 June 1997", "Brisbane Broncos def. Wigan Warriors", "34-0", "ANZ Stadium", "Brisbane", "14,833"]], "types": ["text", "text", "text", "text", "text", "real"], "caption": "Round 2"}'
+                            'Provide data related to the instruction. This needs to be in the following format to be interpreted correctly\n{\n\t"header": ["H1", "H2"],\n\t"rows": [["R1D1", "R1D2"], ["R2D1", "R2D2"]],\n\t"types: ["text", "text"]\n}',                        
+                    )   
+                with gr.Row(variant="panel"):     
+                    expected_result = gr.components.Textbox(
+                        lines=1, 
+                        label="Expected result", 
+                        placeholder=
+                            'This is the expected result - will be populated when one of the example below is chosen',                        
                     )   
                 
                 with gr.Row():
                     clear_btn = gr.ClearButton(value="Clear")
                     submit_btn = gr.components.Button(value="Submit", variant="primary")
-                    test_btn = gr.components.Button(value="Test", variant="primary")
+                    
                     
             with gr.Column(scale=44):
                 with gr.Row(variant="panel"):    
-                    raw_out = gr.inputs.Textbox(
-                        lines=2,
-                        label="Raw output",
-                    )
-                with gr.Row(variant="panel"):    
-                    response_out = gr.inputs.Textbox(
-                        lines=2,
-                        label="Response",
-                    )
-                with gr.Row(variant="panel"):    
-                    eval_out = gr.inputs.Textbox(
-                        lines=2,
-                        label="Evaluation",
-                    )
-                with gr.Row(variant="panel"):    
-                    result_out = gr.inputs.Textbox(
+                    result_out = gr.components.Textbox(
                         lines=2,
                         label="Result",
+                    )
+                with gr.Column(scale=50):
+                    with gr.Row(variant="panel"):    
+                        eval_out = gr.components.Textbox(
+                            lines=2,
+                            label="Evaluation",
+                        )
+                with gr.Column(scale=50):
+                    with gr.Row(variant="panel"):    
+                        template_out = gr.components.Textbox(
+                            lines=2,
+                            label="Template used",
+                        )
+                with gr.Row(variant="panel"):    
+                    raw_out = gr.components.Textbox(
+                        lines=2,
+                        label="Raw output",
                     )
                 with gr.Row():    
                     flag_btn = gr.Button("Flag this output", variant="stop")
@@ -300,26 +377,31 @@ def main(
                     )
                 with gr.Row(variant="panel"):    
                     max_tokens = gr.components.Slider(
-                        minimum=1, maximum=2000, step=1, value=256, label="Max tokens", info="Stopping criteria for the model"
+                        minimum=1, maximum=2000, step=1, value=512, label="Max tokens", info="Stopping criteria for the model"
                     )
                 with gr.Row(variant="panel"):    
                     stream = gr.components.Checkbox(
-                        label="Stream output", value=True, info="Stream the output one token at a time."
+                        label="Stream output", value=False, info="Stream the output one token at a time. Can produce inaccurate outputs"
                     )   
-                
+        with gr.Row():
+            gr.Examples(
+                examples=examples,
+                inputs=[instruction, input, data, expected_result],
+                examples_per_page=20,
+                label="Test data not seen during training"
+            )        
         
         # list of inputs and outputs
         inputs = [instruction, input, data, temperature, top_k, top_p, beams, max_tokens, stream]
-        outputs = [raw_out, response_out, eval_out, result_out]
+        outputs = [result_out, eval_out, template_out, raw_out]
         
         # clear button setup
-        components_to_clear = [instruction, input] + outputs
+        components_to_clear = [instruction, input, data] + outputs + [expected_result]
         clear_btn.add(components=components_to_clear)
 
         # submit on click 
         submit_btn.click(fn=evaluate, inputs=inputs, outputs=outputs)
-        test_btn.click(fn=test_prompter, inputs=inputs, outputs=outputs)
-
+    
         # We can choose which components to flag -- in this case, we'll flag all of them
         callback.setup(inputs + outputs, "flagged_data_points")
         flag_btn.click(

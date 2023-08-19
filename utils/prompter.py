@@ -3,7 +3,7 @@ import os.path as osp
 from typing import Union
 
 import pandas as pd
-
+import re
 from pandas import DataFrame
 from pandasql import sqldf
 
@@ -67,39 +67,14 @@ class Prompter(object):
         return table_df
 
     def __clean_equation(self, eq: str) -> str:
-        out = eq.replace(",", "")
-        out = out.replace("%", "")
-        return out
-    
-    def __clean_table(self) -> str:
-        cleaned_table = self._data
-        if cleaned_table.startswith("{'header"):
-            cleaned_table = cleaned_table \
-                .replace('"', "~") \
-                .replace("'", '"') \
-                .replace("~", "'")
+        cleaned_eq = re.sub(r"[,%\$]", "", eq)
+        return cleaned_eq
 
-        return cleaned_table
     
-
-    def __get_sql(self, response: str) -> str:
-        sql = None
-        if len(response.split("### SQL:")) > 1:
-            sql = response.split("### SQL:")[1].strip()
-        return sql
-    
-    def __get_equation(self, response: str) -> str:
-        equation = None
-        if len(response.split("### Eval:")) > 1:
-            equation = response.split("### Eval:")[1].split("### SQL:")[0].strip()
-        
-        return self.__clean_equation(equation)
-    
-    def __evaluate_query(self, response: str) -> (str, str):
+    def __evaluate_query(self, sql: str) -> (str, str):
         result = "None"
-        sql = self.__get_sql(response)
-        
-        cleaned_table = self.__clean_table()
+     
+        cleaned_table = self._data
         try:
             j = json.loads(cleaned_table)
             data_table = self.__table_to_pandas(j)
@@ -113,18 +88,27 @@ class Prompter(object):
         except Exception as e:
             result = f"SQL is malformed: {sql}\nException:{e}"
 
-        return (sql, result)
+        return (sql, str(result))
 
 
 
-    def __evaluate_equation(self, response: str) -> (str, str):
-        eq = self.__get_equation(response)
+    def __evaluate_equation(self, eq: str) -> (str, str):
+        cleaned_eq = self.__clean_equation(eq)
+        pattern = re.compile(r"^\(.*-.*\).*/.*$", re.IGNORECASE)
+
         try:
-            result = round(eval(eq),2)
+            result = eval(cleaned_eq)
+            
+            # if the pattern of the equation signifies 
+            # that this is a percentage, multiply the
+            # result by 100
+            result *= 100 if pattern.match(eq) else result
+            
+            result = round(result, 2)
         except Exception as e:
-            result = f"Equation is malformed: {eq}\nException:{e}"
+            result = f"Equation is malformed: {cleaned_eq}\nException:{e}"
 
-        return (eq, result)
+        return (cleaned_eq, str(result))
 
 
     def generate_training_prompt(
@@ -195,6 +179,47 @@ class Prompter(object):
             prompt += response
 
         return prompt
+    
+    def generate_inference_prompt(
+        self,
+        instruction: str,
+        input: Union[None, str] = None,
+        data: Union[None, str] = None,
+        template: Union[None, str] = None,
+    ) -> str:
+        # returns the full prompt from instruction and optional input
+        # if a label (=response, =output) is provided, it's also appended.
+        self._instruction = instruction
+        self._input = input
+        self._data = data
+
+        # there must be a better way to do this
+        # but I have to move fast
+
+        if not template:
+            template = "template"
+
+        if input and data:
+            prompt_id = "full_prompt" 
+        elif data and not input:
+            prompt_id = "data_prompt" 
+        elif not data and  input:
+            prompt_id = "input_prompt"       
+        else:
+            prompt_id = "default_prompt"       
+
+        prompt_format = self._template[template][prompt_id]
+        
+        if prompt_id == "full_prompt":
+            prompt = prompt_format.format(instruction=instruction, input=input, data=data)
+        elif prompt_id == "input_prompt":
+            prompt = prompt_format.format(instruction=instruction, input=input)
+        elif prompt_id == "data_prompt":
+            prompt = prompt_format.format(instruction=instruction, data=data)
+        else:
+            prompt = prompt_format.format(instruction=instruction)
+
+        return prompt
 
     def generate_prompt(
         self,
@@ -227,36 +252,42 @@ class Prompter(object):
 
         return prompt
 
-    def get_response(self, output: str) -> (str, str, str, str):
+    def get_response(self, output: str, template:str) -> (str, str, str, str):
         
-        if "### Response:" in output:
-            response = output.split("### Response:")[1].replace("</s>", "").strip()
-        else:
-            return (output, None, None, None)
-    
-        eval = None
+        response_split = self._template[template]["response_split"]
         result = None
+        eval = None 
 
-        if "### SQL:" in response:
-            eval, result = self.__evaluate_query(response)
-        if "### Eval:" in response:
-            eval, result = self.__evaluate_equation(response)
-                
-        response = response.split("### SQL:")[0].split("### Eval:")[0].strip()
+        if response_split in output:
+            response = output.split(response_split)[1].replace("</s>", "").strip()        
+            
+            eval = None
+            result = None
+
+            if template == "script":
+                eval, result = self.__evaluate_query(response)
+            elif template == "arithmetic":
+                eval, result = self.__evaluate_equation(response)
+            else: 
+                result = response            
         
-        return (output, response, eval, result)
+        return (result, eval, template, output)
+
+    def get_template(self, output: str) -> str:        
+        response = output
+        if "### Template:" in output:
+            response = output.split("### Template:")[1].replace("</s>", "").strip()
     
-    def get_response_for_evaluation(self, output: str) -> (str, str):
-        response_split = self.template["response_split"]
-        derivation_split = self.template["derivation_split"]
-                
-        response = output.split(response_split)[1].split(derivation_split)[0].replace("</s>", "").strip()
-        derivation = None
-        if len(output.split(derivation_split)) > 1:
-            derivation = output.split(derivation_split)[1].replace("</s>", "").strip()
+        return response
+    
+    def get_response_for_evaluation(self, output: str, template:str) -> dict:
+        
+        result, eval, template, output = self.get_response(output=output, template=template)
 
         return {
-            "derivation" : derivation,
-            "response": response
+            "result" : result,
+            "eval": eval,
+            "template": template,
+            "output": output,
         }
         

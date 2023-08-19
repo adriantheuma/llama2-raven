@@ -1,0 +1,3189 @@
+{
+    "base_model_config": {
+        "vocab_size": 32000,
+        "max_position_embeddings": 4096,
+        "hidden_size": 5120,
+        "intermediate_size": 13824,
+        "num_hidden_layers": 40,
+        "num_attention_heads": 40,
+        "num_key_value_heads": 40,
+        "hidden_act": "silu",
+        "initializer_range": 0.02,
+        "rms_norm_eps": 1e-05,
+        "pretraining_tp": 1,
+        "use_cache": true,
+        "rope_scaling": null,
+        "return_dict": true,
+        "output_hidden_states": false,
+        "output_attentions": false,
+        "torchscript": false,
+        "torch_dtype": "float16",
+        "use_bfloat16": false,
+        "tf_legacy_loss": false,
+        "pruned_heads": {},
+        "tie_word_embeddings": false,
+        "is_encoder_decoder": false,
+        "is_decoder": false,
+        "cross_attention_hidden_size": null,
+        "add_cross_attention": false,
+        "tie_encoder_decoder": false,
+        "max_length": 20,
+        "min_length": 0,
+        "do_sample": false,
+        "early_stopping": false,
+        "num_beams": 1,
+        "num_beam_groups": 1,
+        "diversity_penalty": 0.0,
+        "temperature": 1.0,
+        "top_k": 50,
+        "top_p": 1.0,
+        "typical_p": 1.0,
+        "repetition_penalty": 1.0,
+        "length_penalty": 1.0,
+        "no_repeat_ngram_size": 0,
+        "encoder_no_repeat_ngram_size": 0,
+        "bad_words_ids": null,
+        "num_return_sequences": 1,
+        "chunk_size_feed_forward": 0,
+        "output_scores": false,
+        "return_dict_in_generate": false,
+        "forced_bos_token_id": null,
+        "forced_eos_token_id": null,
+        "remove_invalid_values": false,
+        "exponential_decay_length_penalty": null,
+        "suppress_tokens": null,
+        "begin_suppress_tokens": null,
+        "architectures": [
+            "LlamaForCausalLM"
+        ],
+        "finetuning_task": null,
+        "id2label": {
+            "0": "LABEL_0",
+            "1": "LABEL_1"
+        },
+        "label2id": {
+            "LABEL_0": 0,
+            "LABEL_1": 1
+        },
+        "tokenizer_class": null,
+        "prefix": null,
+        "bos_token_id": 1,
+        "pad_token_id": 0,
+        "eos_token_id": 2,
+        "sep_token_id": null,
+        "decoder_start_token_id": null,
+        "task_specific_params": null,
+        "problem_type": null,
+        "_name_or_path": "meta-llama/Llama-2-13b-chat-hf",
+        "transformers_version": "4.31.0",
+        "model_type": "llama"
+    },
+    "lora_config": {
+        "peft_type": "LORA",
+        "auto_mapping": null,
+        "base_model_name_or_path": "meta-llama/Llama-2-13b-chat-hf",
+        "revision": null,
+        "task_type": "CAUSAL_LM",
+        "inference_mode": true,
+        "r": 16,
+        "target_modules": [
+            "q_proj",
+            "k_proj",
+            "v_proj",
+            "o_proj"
+        ],
+        "lora_alpha": 16,
+        "lora_dropout": 0.05,
+        "fan_in_fan_out": false,
+        "bias": "none",
+        "modules_to_save": null,
+        "init_lora_weights": true,
+        "layers_to_transform": null,
+        "layers_pattern": null
+    },
+    "evaluation_config": {
+        "temperature": 0.1,
+        "top_p": 0.75,
+        "top_k": 10,
+        "num_beams": 2,
+        "max_new_tokens": 2048,
+        "return_dict_in_generate": true
+    },
+    "results": {
+        "alpaca": {
+            "num_samples": 40,
+            "num_match": 40,
+            "accuracy": 1.0
+        },
+        "wiki-sql": {
+            "num_samples": 67,
+            "num_match": 45,
+            "accuracy": 0.6716417910447762
+        },
+        "tat-qa": {
+            "num_samples": 68,
+            "num_match": 31,
+            "accuracy": 0.45588235294117646
+        },
+        "ott-qa": {
+            "num_samples": 15,
+            "num_match": 15,
+            "accuracy": 1.0
+        },
+        "overall": {
+            "num_samples": 190,
+            "num_match": 131,
+            "accuracy": 0.6894736842105263
+        }
+    },
+    "predictions": {
+        "alpaca": [
+            {
+                "instruction": "Convert the given paragraph to a list.",
+                "input": "One of the great benefits of using a GPT language model is that it can help developers quickly create or enhance existing applications by providing easy access to a wide range of natural language processing capabilities.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Describe a process of how to make scrambled eggs",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Identify the prefix and the suffix Meaning of the word \"uncooperative\".",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Rewrite the sentence \"Tom studied hard for the test.\" in passive voice.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Find the value of x in the expression x + 4 = 10",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Compose a tweet to increase brand awareness.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What are the benefits of using a neural network architecture?",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What challenges can you expect when editing a long-form article?",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Calculate the frequency of letter \u2018a\u2019 in the following sentence",
+                "input": "This is a sentence",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Explain why certain elements are necessary in any successful speech",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Who is the CEO of Google?",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Identify the person that is referred to in the passage.",
+                "input": "My friend George lives in Boston and often comes to New York to visit me.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Check if the article is missing any link to the source.",
+                "input": "This article outlines the rise of online shopping over the past decade.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Make a list of common elements present in a modern web page.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "How is a blockchain different from a database?",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Identify five statistical measures that are important for evaluating the performance of a machine learning model",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Given a fact about a selected topic, provide a relevant example.",
+                "input": "Factions in society can lead to civil unrest.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Outline a strategy for using productivity tools such as Asana.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Explain what a blockchain is and its benefits",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Find the closest restaurant to the following address: 15 Main Street, Anytown, USA",
+                "input": "15 Main Street, Anytown, USA",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Generate a specific example of a data structure that can be used in a web application.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Please classify this song as either jazz, blues, or hip-hop.",
+                "input": "Song Title: \"Money\" by Pink Floyd",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Generate a simile for knowledge.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Rewrite the following sentence without losing the meaning: The church bells tolled as if to mark the passing of something.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Summarize this paragraph in 1 sentence.",
+                "input": "Numerous studies have shown that improving the living environment of participants such as providing secure housing and access to basic necessities, can improve mental and physical health.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Generate sentences that uses the given vocabulary words.",
+                "input": "Vocabulary Words:\n- Gloom\n- Muttered\n- Resolve",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Give three examples of big data applications.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Explain how deep learning is being used to diagnose diseases.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Give me a short biography of Winston Churchill.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Write a request for further information",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Create a 3-5 sentence definition for the term \"data science\".",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Generate a computer program to calculate the area of rectangle",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Rewrite the sentence to use a negative adverb.",
+                "input": "He walks carefully.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Which rocks are used to make a firewall?",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Find the irregular verb in the sentence and write its past tense form.",
+                "input": "She swims every day.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Give an example of an energy transformation from chemical energy to kinetic energy.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Provide a list of benefits of a plant-based diet.",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Order the following animals according to their size.",
+                "input": "Marmot, Elephant, Wolf, Gorilla",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Select the best headline for the following article.",
+                "input": "Article:\n\nThis week's news offers compelling evidence that renewable energy sources are becoming increasingly accessible and cost-effective. Solar panels and wind turbines can provide clean, renewable power for homes and businesses, while new innovations in technology are making solar panels more efficient and cost-effective than ever.",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Write a review of the book \"The Hunger Games\".",
+                "input": "",
+                "predicted_response": "generic",
+                "gold": "generic",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            }
+        ],
+        "wiki-sql": [
+            {
+                "instruction": "What 2nd run has a less than 6 rank, and 3 as the total?",
+                "input": "",
+                "predicted_response": "script",
+                "gold": "script",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the greatest Wins with Matches smaller than 5, and a Year of 1994?",
+                "input": "",
+                "predicted_response": "3.0",
+                "gold": "3.0",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What sport had a final score of 3-2?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([Sport]) FROM data_table WHERE LOWER([\nException:(sqlite3.OperationalError) unrecognized token: \"[\"\n[SQL: SELECT ([Sport]) FROM data_table WHERE LOWER([]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "Baseball",
+                "match": 0,
+                "bert_f1": [
+                    0.7665355205535889
+                ],
+                "bert_precision": [
+                    0.7221646308898926
+                ],
+                "bert_recall": [
+                    0.8167158365249634
+                ]
+            },
+            {
+                "instruction": "What is the date of the poll with Goldberg at 26%?",
+                "input": "",
+                "predicted_response": "script",
+                "gold": "script",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the result for Thirst in 2010 at the Green Globe Film Awards?",
+                "input": "",
+                "predicted_response": "None",
+                "gold": "Nominated",
+                "match": 0,
+                "bert_f1": [
+                    0.833002507686615
+                ],
+                "bert_precision": [
+                    0.88460373878479
+                ],
+                "bert_recall": [
+                    0.787089467048645
+                ]
+            },
+            {
+                "instruction": "Which poll source had an other of 15%?",
+                "input": "",
+                "predicted_response": "10%",
+                "gold": "Rasmussen Reports",
+                "match": 0,
+                "bert_f1": [
+                    0.8711058497428894
+                ],
+                "bert_precision": [
+                    0.8784219026565552
+                ],
+                "bert_recall": [
+                    0.8639106750488281
+                ]
+            },
+            {
+                "instruction": "What is the earlest election with a 0.9% share of votes?",
+                "input": "",
+                "predicted_response": "2008.0",
+                "gold": "2008.0",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What is the transcription for the English word March?",
+                "input": "",
+                "predicted_response": "minakhom",
+                "gold": "minakhom",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What time was the fastest lap during Stoh's 200 in 1982?",
+                "input": "",
+                "predicted_response": "script",
+                "gold": "script",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the total number of top-25 a tournament with less than 2 events has?",
+                "input": "",
+                "predicted_response": "3",
+                "gold": "0",
+                "match": 0,
+                "bert_f1": [
+                    0.9783428311347961
+                ],
+                "bert_precision": [
+                    0.9783428311347961
+                ],
+                "bert_recall": [
+                    0.9783428311347961
+                ]
+            },
+            {
+                "instruction": "What is the lowest Lane, when Mark is 7.66?",
+                "input": "",
+                "predicted_response": "1.0",
+                "gold": "1.0",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Where is the Eastern Creek Raceway located?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([Location / State]) FROM data_table WHERE LOWER([Circuit]) = LOWER\nException:(sqlite3.OperationalError) no such column: LOWER\n[SQL: SELECT ([Location / State]) FROM data_table WHERE LOWER([Circuit]) = LOWER]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "Sydney , New South Wales",
+                "match": 0,
+                "bert_f1": [
+                    0.755902886390686
+                ],
+                "bert_precision": [
+                    0.7326210737228394
+                ],
+                "bert_recall": [
+                    0.7807131409645081
+                ]
+            },
+            {
+                "instruction": "What is the name of a league in the sport of baseball?",
+                "input": "",
+                "predicted_response": "IL",
+                "gold": "IL",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What ethnic group is 65,104 in 1931?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([Malay Ethnic Group]) FROM data_table WHERE LOWER([1931]) = LOWER('65,104')\nException:(sqlite3.OperationalError) no such column: 1931\n[SQL: SELECT ([Malay Ethnic Group]) FROM data_table WHERE LOWER([1931]) = LOWER('65,104')]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "Total",
+                "match": 0,
+                "bert_f1": [
+                    0.7632676362991333
+                ],
+                "bert_precision": [
+                    0.7161787748336792
+                ],
+                "bert_recall": [
+                    0.8169845342636108
+                ]
+            },
+            {
+                "instruction": "What is the venue where Collingwood played as the away team?",
+                "input": "",
+                "predicted_response": "Windy Hill",
+                "gold": "Windy Hill",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What player had a total less than 277?",
+                "input": "",
+                "predicted_response": "Nick Faldo",
+                "gold": "Nick Faldo",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "How many lowest mark entries are there when % passed is 76?",
+                "input": "",
+                "predicted_response": "1",
+                "gold": "1",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "WHich Places have a score smaller than 69?",
+                "input": "",
+                "predicted_response": "1",
+                "gold": "1",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "What Notes after 1983 have a Position of 18th?",
+                "input": "",
+                "predicted_response": "High Jump",
+                "gold": "High Jump",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What is the location of the car that has a constructor of Lorraine-Dietrich?",
+                "input": "",
+                "predicted_response": "script",
+                "gold": "script",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "Which shoulder charge has restricted as the body tackle?",
+                "input": "",
+                "predicted_response": "Reportable",
+                "gold": "Reportable",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What Elimination Move is listed against Wrestler Henry, Eliminated by Batista?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([Elimination Move]) FROM data_table WHERE LOWER([Wrestler]) = LOWER('henry') AND LOWER([Eliminated by]) = LOWER('bat\nException:(sqlite3.OperationalError) unrecognized token: \"'bat\"\n[SQL: SELECT ([Elimination Move]) FROM data_table WHERE LOWER([Wrestler]) = LOWER('henry') AND LOWER([Eliminated by]) = LOWER('bat]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "Spear",
+                "match": 0,
+                "bert_f1": [
+                    0.7559255361557007
+                ],
+                "bert_precision": [
+                    0.696934700012207
+                ],
+                "bert_recall": [
+                    0.8258261680603027
+                ]
+            },
+            {
+                "instruction": "What is the Time of the Athlete with a Rank of 6?",
+                "input": "",
+                "predicted_response": "1:55.911",
+                "gold": "1:55.911",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "What is Home Team, when Tie No is 4?",
+                "input": "",
+                "predicted_response": "Sheffield United",
+                "gold": "Sheffield United",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Which school has an enrollment of A and had lost river as their previous conference?",
+                "input": "",
+                "predicted_response": "Borden *",
+                "gold": "Borden *",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What was the venue where there were 62 runs?",
+                "input": "",
+                "predicted_response": "Gabba , Brisbane",
+                "gold": "Gabba , Brisbane",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "List the number of active years for attaquant.",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT COUNT([Appearances]) FROM data_table WHERE LOW\nException:(sqlite3.OperationalError) no such column: LOW\n[SQL: SELECT COUNT([Appearances]) FROM data_table WHERE LOW]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "1981  1984",
+                "match": 0,
+                "bert_f1": [
+                    0.7636908292770386
+                ],
+                "bert_precision": [
+                    0.7361940741539001
+                ],
+                "bert_recall": [
+                    0.7933213710784912
+                ]
+            },
+            {
+                "instruction": "What are the scores for games played on september 9?",
+                "input": "",
+                "predicted_response": "L 86-76",
+                "gold": "L 86-76",
+                "match": 1,
+                "bert_f1": [
+                    0.9999998807907104
+                ],
+                "bert_precision": [
+                    0.9999998807907104
+                ],
+                "bert_recall": [
+                    0.9999998807907104
+                ]
+            },
+            {
+                "instruction": "What is the snatch for the person holding the Olympic record, and 173kg of 172kg?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([Snatch]) FROM data_table WHERE LOWER([Olympic record]) = LOWER('') AND LOWER([173kg]) = LOWER('')\nException:(sqlite3.OperationalError) no such column: Olympic record\n[SQL: SELECT ([Snatch]) FROM data_table WHERE LOWER([Olympic record]) = LOWER('') AND LOWER([173kg]) = LOWER('')]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "Snatch",
+                "match": 0,
+                "bert_f1": [
+                    0.7713617086410522
+                ],
+                "bert_precision": [
+                    0.7164571285247803
+                ],
+                "bert_recall": [
+                    0.8353797197341919
+                ]
+            },
+            {
+                "instruction": "What was the last round the team drafted?",
+                "input": "",
+                "predicted_response": "6",
+                "gold": "6",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "Who is the player associated with the Esher venue?",
+                "input": "",
+                "predicted_response": "SQL is malformed: \nException:object of type 'NoneType' has no len()",
+                "gold": "Viliame Iongi",
+                "match": 0,
+                "bert_f1": [
+                    0.7477231025695801
+                ],
+                "bert_precision": [
+                    0.7623815536499023
+                ],
+                "bert_recall": [
+                    0.7336176037788391
+                ]
+            },
+            {
+                "instruction": "What is the Place of the Event on August 25, 2007?",
+                "input": "",
+                "predicted_response": "Osaka",
+                "gold": "Osaka",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "WHAT IS TEH PLAYER WITH A TO PAR OF +1 FOR SCOTLAND?",
+                "input": "",
+                "predicted_response": "Scotland",
+                "gold": "Colin Montgomerie",
+                "match": 0,
+                "bert_f1": [
+                    0.7762306332588196
+                ],
+                "bert_precision": [
+                    0.899504542350769
+                ],
+                "bert_recall": [
+                    0.6826727390289307
+                ]
+            },
+            {
+                "instruction": "What is the orbital regime of launches greater than 4 and failures less than 2?",
+                "input": "",
+                "predicted_response": "Low Earth",
+                "gold": "Low Earth",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Which home team has a venue of windy hill?",
+                "input": "",
+                "predicted_response": "Essendon",
+                "gold": "Essendon",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "Which position did the drafted player affiliated with UCLA play?",
+                "input": "",
+                "predicted_response": "script",
+                "gold": "script",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is Tom Kite's Place?",
+                "input": "",
+                "predicted_response": "T4",
+                "gold": "T4",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "When did an away team have a crowd larger than 17,259 at Melbourne?",
+                "input": "",
+                "predicted_response": "None",
+                "gold": "7 May 1966",
+                "match": 0,
+                "bert_f1": [
+                    0.8483265042304993
+                ],
+                "bert_precision": [
+                    0.8909699320793152
+                ],
+                "bert_recall": [
+                    0.8095785975456238
+                ]
+            },
+            {
+                "instruction": "What is the date administered when Vivian Davis Figures was at 36%?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([Dates administered]) FROM data_table WHERE LOWER([Democrat: Vivian Davis Figures]) = LOWER('36\nException:(sqlite3.OperationalError) unrecognized token: \"'36\"\n[SQL: SELECT ([Dates administered]) FROM data_table WHERE LOWER([Democrat: Vivian Davis Figures]) = LOWER('36]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "April 2, 2008",
+                "match": 0,
+                "bert_f1": [
+                    0.7737080454826355
+                ],
+                "bert_precision": [
+                    0.7516307830810547
+                ],
+                "bert_recall": [
+                    0.797121524810791
+                ]
+            },
+            {
+                "instruction": "How many goals have a result of 0-1 on march 28, 2007?",
+                "input": "",
+                "predicted_response": "1",
+                "gold": "1",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "Which category was Michael Stewart a nominee in?",
+                "input": "",
+                "predicted_response": "script",
+                "gold": "script",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What's the average round number for East Carolina?",
+                "input": "",
+                "predicted_response": "6.0",
+                "gold": "6.0",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Which manucfaturer's type was 2-6-0?",
+                "input": "",
+                "predicted_response": "Beyer, Peacock & Co.",
+                "gold": "Beyer, Peacock & Co.",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What score has amblecote as the venue?",
+                "input": "",
+                "predicted_response": "372 runs",
+                "gold": "372 runs",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "how many guest stars did the episode that was broadcasted 11september2012 have",
+                "input": "",
+                "predicted_response": "0",
+                "gold": "1",
+                "match": 0,
+                "bert_f1": [
+                    0.9803618788719177
+                ],
+                "bert_precision": [
+                    0.9803618788719177
+                ],
+                "bert_recall": [
+                    0.9803618788719177
+                ]
+            },
+            {
+                "instruction": "During runs 332, what was the venue?",
+                "input": "",
+                "predicted_response": "Old County Ground , Brentwood",
+                "gold": "Old County Ground , Brentwood",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Which players have a pick number of 27?",
+                "input": "",
+                "predicted_response": "Connor Healey",
+                "gold": "Connor Healey",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What district is incumbent frank chelf from?",
+                "input": "",
+                "predicted_response": "Kentucky 4",
+                "gold": "Kentucky 4",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "What is the sum of % for 2001 if 2001 seats equals 7?",
+                "input": "",
+                "predicted_response": "None",
+                "gold": "1",
+                "match": 0,
+                "bert_f1": [
+                    0.9984092116355896
+                ],
+                "bert_precision": [
+                    0.9984092116355896
+                ],
+                "bert_recall": [
+                    0.9984092116355896
+                ]
+            },
+            {
+                "instruction": "What team played Geelong at their away game?",
+                "input": "",
+                "predicted_response": "None",
+                "gold": "Hawthorn",
+                "match": 0,
+                "bert_f1": [
+                    0.8612525463104248
+                ],
+                "bert_precision": [
+                    0.925717830657959
+                ],
+                "bert_recall": [
+                    0.805181086063385
+                ]
+            },
+            {
+                "instruction": "Which away team scored 12.18 (90)?",
+                "input": "",
+                "predicted_response": "Essendon",
+                "gold": "Essendon",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "If the best winning average is 7.3-71, what are the total points?",
+                "input": "",
+                "predicted_response": "1",
+                "gold": "2056",
+                "match": 0,
+                "bert_f1": [
+                    0.885532557964325
+                ],
+                "bert_precision": [
+                    0.9304266571998596
+                ],
+                "bert_recall": [
+                    0.8447714447975159
+                ]
+            },
+            {
+                "instruction": "what is the country when the nots is sa/b, the rank is more than 1 and the athlete is zhang xiuyun?",
+                "input": "",
+                "predicted_response": "China",
+                "gold": "China",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Who won the race on June 26?",
+                "input": "",
+                "predicted_response": "Daniel Ruiz",
+                "gold": "Daniel Ruiz",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Where the audience share is 8%, what is the original airing?",
+                "input": "",
+                "predicted_response": "16 March 2008",
+                "gold": "16 March 2008",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "Which team has an away score of 7.9 (51)?",
+                "input": "",
+                "predicted_response": "None",
+                "gold": "8.17 (65)",
+                "match": 0,
+                "bert_f1": [
+                    0.8413106203079224
+                ],
+                "bert_precision": [
+                    0.8484645485877991
+                ],
+                "bert_recall": [
+                    0.8342762589454651
+                ]
+            },
+            {
+                "instruction": "What is the smallest End term with a Start term of 1913, and a Name of ludwig iii?",
+                "input": "",
+                "predicted_response": "1918.0",
+                "gold": "1918.0",
+                "match": 1,
+                "bert_f1": [
+                    0.9999998807907104
+                ],
+                "bert_precision": [
+                    0.9999998807907104
+                ],
+                "bert_recall": [
+                    0.9999998807907104
+                ]
+            },
+            {
+                "instruction": "What is the total number of cuts made for events played more than 3 times and under 2 top-25s?",
+                "input": "",
+                "predicted_response": "0",
+                "gold": "0",
+                "match": 1,
+                "bert_f1": [
+                    0.9999998807907104
+                ],
+                "bert_precision": [
+                    0.9999998807907104
+                ],
+                "bert_recall": [
+                    0.9999998807907104
+                ]
+            },
+            {
+                "instruction": "Which area did estrella tv 62 provide coverage for?",
+                "input": "",
+                "predicted_response": "Los Angeles, California",
+                "gold": "Los Angeles, California",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "What was the highest attendance against Real Juventud?",
+                "input": "",
+                "predicted_response": "script",
+                "gold": "script",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the total Avg when TDs are 0 and Dawan Moss is a player?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT COUNT([Avg]) FROM data_table WHERE [TDs] = 0 AND LOWER([Player]) = LOWER('dawan moss')\nException:(sqlite3.OperationalError) no such column: Avg\n[SQL: SELECT COUNT([Avg]) FROM data_table WHERE [TDs] = 0 AND LOWER([Player]) = LOWER('dawan moss')]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "0",
+                "match": 0,
+                "bert_f1": [
+                    0.7567271590232849
+                ],
+                "bert_precision": [
+                    0.7091298699378967
+                ],
+                "bert_recall": [
+                    0.8111737370491028
+                ]
+            },
+            {
+                "instruction": "Which date has roma as opponent and a H/A of A?",
+                "input": "",
+                "predicted_response": "4 April 2007",
+                "gold": "4 April 2007",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What Valley Vista has a Dysart of 1668?",
+                "input": "",
+                "predicted_response": "2304",
+                "gold": "2304",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What is on at 8:00 on the same change as W-Five at 10:00?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([8:00]) FROM data_table WHERE LOWER([10:00]) = LOWER('w-five')\nException:(sqlite3.OperationalError) no such column: 8:00\n[SQL: SELECT ([8:00]) FROM data_table WHERE LOWER([10:00]) = LOWER('w-five')]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "Home Improvement",
+                "match": 0,
+                "bert_f1": [
+                    0.7657507061958313
+                ],
+                "bert_precision": [
+                    0.719519853591919
+                ],
+                "bert_recall": [
+                    0.8183304071426392
+                ]
+            },
+            {
+                "instruction": "The series titled dragon laws i: the undercover has what role?",
+                "input": "",
+                "predicted_response": "\"Police Officer Lung\"",
+                "gold": "\"Police Officer Lung\"",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "In the Central region, where the land area (km 2) is 8,543.2, what was the rainfall by depth (mm/year)?",
+                "input": "",
+                "predicted_response": "SQL is malformed: SELECT ([Rainfall by depth (mm/year)]) FROM data_table WHERE LOWER([Region]) = LOWER('Central') AND LOWER([Land area (km 2\nException:(sqlite3.OperationalError) unrecognized token: \"[Land area (km 2\"\n[SQL: SELECT ([Rainfall by depth (mm/year)]) FROM data_table WHERE LOWER([Region]) = LOWER('Central') AND LOWER([Land area (km 2]\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+                "gold": "3461",
+                "match": 0,
+                "bert_f1": [
+                    0.752585232257843
+                ],
+                "bert_precision": [
+                    0.7153904438018799
+                ],
+                "bert_recall": [
+                    0.7938597202301025
+                ]
+            },
+            {
+                "instruction": "How many people attended the uefa champions league competition?",
+                "input": "",
+                "predicted_response": "1",
+                "gold": "1189",
+                "match": 0,
+                "bert_f1": [
+                    0.8762887120246887
+                ],
+                "bert_precision": [
+                    0.9200807809829712
+                ],
+                "bert_recall": [
+                    0.8364758491516113
+                ]
+            }
+        ],
+        "tat-qa": [
+            {
+                "instruction": "What was the percentage change in Value added tax receivables, net, noncurrent in 2019 from 2018?",
+                "input": "Note 15. Deferred Charges and Other Assets Deferred charges and other assets consisted of the following (in thousands):",
+                "predicted_response": "14.07",
+                "gold": "14.07",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the change in percentage in Americas in 2019 from 2018?",
+                "input": "Sales and Distribution We maintain a strong local presence in each of the geographic regions in which we operate. Our net sales by geographic region(1) as a percentage of our total net sales were as follows: (1) Net sales to external customers are attributed to individual countries based on the legal entity that records the sale. We sell our products into approximately 150 countries primarily through direct selling efforts to manufacturers. In fiscal 2019, our direct sales represented approximately 80% of total net sales. We also sell our products indirectly via third-party distributors. We maintain distribution centers around the world. Products are generally delivered to the distribution centers by our manufacturing facilities and then subsequently delivered to the customer. In some instances, however, products are delivered directly from our manufacturing facility to the customer. Our global coverage positions us near our customers locations and allows us to assist them in consolidating their supply base and lowering their production costs. We contract with a wide range of transport providers to deliver our products globally via road, rail, sea, and air. We believe our balanced sales distribution lowers our exposure to any particular geography and improves our financial profile.",
+                "predicted_response": "arithmetic",
+                "gold": "arithmetic",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the percentage change in Total operating income in 2019 from 2018?",
+                "input": "Operating income included the following: (1) Represents the write-off of certain spare parts. See discussion of operating income below under Segment Results.",
+                "predicted_response": "104.05",
+                "gold": "104.05",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What is the number of deferred share units in 2019?",
+                "input": "Net Loss per Share The Company applies the two-class method to calculate its basic and diluted net loss per share as both classes of its voting shares are participating securities with equal participation rights and are entitled to receive dividends on a share for share basis. The following table summarizes the reconciliation of the basic weighted average number of shares outstanding and the diluted weighted average number of shares outstanding: In the years ended December 31, 2019 and 2018, the Company was in a loss position and therefore diluted loss per share is equal to basic loss per share.",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "Why did on sequential basis the operating expenses increased?",
+                "input": "The amount of our operating expenses increased by $43 million on a sequential basis, mainly driven by seasonality and salary dynamic. On a year-over-year basis, our operating expenses increased by $42 million, mainly due to salary dynamic and increased spending on certain R&D programs, partially offset by favorable currency effects, net of hedging. Fourth quarter 2019 R&D expenses were net of research tax credits in France and Italy, which amounted to $37 million, compared to $29 million in the third quarter of 2019 and $39 million in the fourth quarter of 2018.",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the gross profit in 2018?",
+                "input": "Results of Continuing Operations The analysis presented below is organized to provide the information we believe will facilitate an understanding of our historical performance and relevant trends going forward, and should be read in conjunction with our Consolidated Financial Statements, including the notes thereto, in Item 8 \"Financial Statements and Supplementary Data\" of this Annual Report on Form 10 - K. The following table sets forth, for the periods indicated, certain data derived from our Consolidated Statements of Operations (in thousands):",
+                "predicted_response": "365,607",
+                "gold": "365,607",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the revenues in 2019 and 2018 respectively?",
+                "input": "The following table presents unaudited supplemental pro forma results for fiscal 2019 and 2018 as if both the Grakon acquisition had occurred as of the beginning of fiscal 2018 and the Pacific Insight acquisition had occurred as of the beginning of fiscal 2017. The unaudited pro forma information is presented for information purposes only and is not indicative of the results of operations that would have been achieved if the acquisitions had taken place at such times. The unaudited pro forma results presented below primarily include amortization charges for acquired intangible assets, depreciation adjustments for property, plant and equipment that has been revalued, interest expense adjustments due to an increased debt level, adjustments for certain acquisition-related charges and related tax effects.",
+                "predicted_response": "$1,073.3, $1,095.0",
+                "gold": "$1,073.3, $1,095.0",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What was the change in the revenues from 2018 to 2019?",
+                "input": "The following table presents unaudited supplemental pro forma results for fiscal 2019 and 2018 as if both the Grakon acquisition had occurred as of the beginning of fiscal 2018 and the Pacific Insight acquisition had occurred as of the beginning of fiscal 2017. The unaudited pro forma information is presented for information purposes only and is not indicative of the results of operations that would have been achieved if the acquisitions had taken place at such times. The unaudited pro forma results presented below primarily include amortization charges for acquired intangible assets, depreciation adjustments for property, plant and equipment that has been revalued, interest expense adjustments due to an increased debt level, adjustments for certain acquisition-related charges and related tax effects.",
+                "predicted_response": "470.89",
+                "gold": "-21.7",
+                "match": 0,
+                "bert_f1": [
+                    0.9137415289878845
+                ],
+                "bert_precision": [
+                    0.9221189022064209
+                ],
+                "bert_recall": [
+                    0.9055149555206299
+                ]
+            },
+            {
+                "instruction": "What is the percentage change in the company's 2018 and 2019 current federal tax expense?",
+                "input": "7. INCOME TAXES: The components of income tax expense from operations for fiscal 2019 and fiscal 2018 consisted of the following:",
+                "predicted_response": "-11.92",
+                "gold": "-11.92",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What is the implication for reserving debit elements?",
+                "input": "According to the regulations of Taiwan Financial Supervisory Commission (FSC), UMC is required to appropriate a special reserve in the amount equal to the sum of debit elements under equity, such as unrealized loss on financial instruments and debit balance of exchange differences on translation of foreign operations, at every year-end. Such special reserve is prohibited from distribution. However, if any of the debit elements is reversed, the special reserve in the amount equal to the reversal may be released for earnings distribution or offsetting accumulated deficits. The distribution of earnings for 2018 was approved by the stockholders meeting held on June 12, 2019, while the distribution of earnings for 2019 was approved by the Board of Directors meeting on April 27, 2020. The details of distribution are as follows:",
+                "predicted_response": "If any of the debit elements is reversed, the special reserve in the amount equal to the reversal may be released for earnings distribution or offsetting accumulated deficits.",
+                "gold": "the special reserve in the amount equal to the reversal may be released for earnings distribution or offsetting accumulated deficits.",
+                "match": 0,
+                "bert_f1": [
+                    0.9505816102027893
+                ],
+                "bert_precision": [
+                    0.9341655373573303
+                ],
+                "bert_recall": [
+                    0.9675849676132202
+                ]
+            },
+            {
+                "instruction": "What is the increase/ (decrease) in Cash dividends within Appropriation of earnings from 2018 to 2019?",
+                "input": "According to the regulations of Taiwan Financial Supervisory Commission (FSC), UMC is required to appropriate a special reserve in the amount equal to the sum of debit elements under equity, such as unrealized loss on financial instruments and debit balance of exchange differences on translation of foreign operations, at every year-end. Such special reserve is prohibited from distribution. However, if any of the debit elements is reversed, the special reserve in the amount equal to the reversal may be released for earnings distribution or offsetting accumulated deficits. The distribution of earnings for 2018 was approved by the stockholders meeting held on June 12, 2019, while the distribution of earnings for 2019 was approved by the Board of Directors meeting on April 27, 2020. The details of distribution are as follows:",
+                "predicted_response": "8117085902500",
+                "gold": "2849050",
+                "match": 0,
+                "bert_f1": [
+                    0.860360860824585
+                ],
+                "bert_precision": [
+                    0.8429693579673767
+                ],
+                "bert_recall": [
+                    0.8784852027893066
+                ]
+            },
+            {
+                "instruction": "What is Audit-related services?",
+                "input": "Audit Fees consist of fees billed for the annual audit of our Companys Consolidated Financial Statements, the statutory audit of the financial statements of the Companys subsidiaries and consultations on complex accounting issues relating to the annual audit. Audit Fees also include services that only our independent external auditor can reasonably provide, such as comfort letters and carve-out audits in connection with strategic transactions. Audit-related services are assurance and related fees consisting of the audit of employee benefit plans, due diligence services related to acquisitions and certain agreed-upon procedures. Tax Fees include fees billed for tax compliance services, including the preparation of original and amended tax returns and claims for refund; tax consultations, such as assistance in connection with tax audits and expatriate tax compliance.",
+                "predicted_response": "Audit-related services are assurance and related fees consisting of the audit of employee benefit plans,",
+                "gold": "Audit-related services are assurance and related fees consisting of the audit of employee benefit plans, due diligence services related to acquisitions and certain agreed-upon procedures.",
+                "match": 0,
+                "bert_f1": [
+                    0.9456677436828613
+                ],
+                "bert_precision": [
+                    0.9738759398460388
+                ],
+                "bert_recall": [
+                    0.9190475940704346
+                ]
+            },
+            {
+                "instruction": "Over what duration will the unrecognized compensation cost related to non-vested RSUs be recognized?",
+                "input": "The total fair value of RSUs and PSUs granted and vested during the years ended December 31, 2019, 2018 and 2017 were as follows: As of December 31, 2019, there was $1.1 billion of unrecognized compensation cost related to non-vested RSUs, which will be recognized on a straight-line basis over the remaining weighted average contractual term of approximately 2.5 years. In connection with vesting and release of RSUs and PSUs, the tax benefits realized by the company for the years ended December 31, 2019, 2018 and 2017 were $131 million, $117 million and $180 million, respectively.",
+                "predicted_response": "over the remaining weighted average contractual term of approximately 2.5 years",
+                "gold": "2.5 years",
+                "match": 0,
+                "bert_f1": [
+                    0.8808757066726685
+                ],
+                "bert_precision": [
+                    0.8397529125213623
+                ],
+                "bert_recall": [
+                    0.9262335300445557
+                ]
+            },
+            {
+                "instruction": "What are strategic alternative evaluation costs primarily related to?",
+                "input": "Restructuring costs  Restructuring charges include costs resulting from the exploration of strategic alternatives (the Strategic Alternatives Evaluation) in 2019, and a plan that management initiated to reduce our general and administrative costs. Restructuring charges in 2018 also include costs related to the evaluation of potential alternatives with respect to the Qdoba brand (the Qdoba Evaluation), which resulted in the Qdoba Sale. Refer to Note 10, Discontinued Operations, for information regarding the Qdoba Sale. The following is a summary of the costs incurred in connection with these activities during each fiscal year ( in thousands): (1) Strategic Alternative Evaluation costs are primarily related to third party advisory services. (2) Qdoba Evaluation consulting costs are primarily related to third party advisory services and retention compensation.",
+                "predicted_response": "third party advisory services.",
+                "gold": "Third party advisory services",
+                "match": 0,
+                "bert_f1": [
+                    0.991905689239502
+                ],
+                "bert_precision": [
+                    0.9928024411201477
+                ],
+                "bert_recall": [
+                    0.9910105466842651
+                ]
+            },
+            {
+                "instruction": "What is the difference in total costs incurred between 2018 and 2019?",
+                "input": "Restructuring costs  Restructuring charges include costs resulting from the exploration of strategic alternatives (the Strategic Alternatives Evaluation) in 2019, and a plan that management initiated to reduce our general and administrative costs. Restructuring charges in 2018 also include costs related to the evaluation of potential alternatives with respect to the Qdoba brand (the Qdoba Evaluation), which resulted in the Qdoba Sale. Refer to Note 10, Discontinued Operations, for information regarding the Qdoba Sale. The following is a summary of the costs incurred in connection with these activities during each fiscal year ( in thousands): (1) Strategic Alternative Evaluation costs are primarily related to third party advisory services. (2) Qdoba Evaluation consulting costs are primarily related to third party advisory services and retention compensation.",
+                "predicted_response": "4804864",
+                "gold": "2192",
+                "match": 0,
+                "bert_f1": [
+                    0.8871425986289978
+                ],
+                "bert_precision": [
+                    0.872402548789978
+                ],
+                "bert_recall": [
+                    0.9023892879486084
+                ]
+            },
+            {
+                "instruction": "For 2018, what is the percentage of constitution of employee severance and related costs among the total cost?",
+                "input": "Restructuring costs  Restructuring charges include costs resulting from the exploration of strategic alternatives (the Strategic Alternatives Evaluation) in 2019, and a plan that management initiated to reduce our general and administrative costs. Restructuring charges in 2018 also include costs related to the evaluation of potential alternatives with respect to the Qdoba brand (the Qdoba Evaluation), which resulted in the Qdoba Sale. Refer to Note 10, Discontinued Operations, for information regarding the Qdoba Sale. The following is a summary of the costs incurred in connection with these activities during each fiscal year ( in thousands): (1) Strategic Alternative Evaluation costs are primarily related to third party advisory services. (2) Qdoba Evaluation consulting costs are primarily related to third party advisory services and retention compensation.",
+                "predicted_response": "0.72",
+                "gold": "73.68",
+                "match": 0,
+                "bert_f1": [
+                    0.9620603322982788
+                ],
+                "bert_precision": [
+                    0.9620603322982788
+                ],
+                "bert_recall": [
+                    0.9620603322982788
+                ]
+            },
+            {
+                "instruction": "How is the basic and diluted net loss per ordinary share calculated?",
+                "input": "Net Loss Per Ordinary Share The Company calculates basic and diluted net loss per ordinary share by dividing net loss by the weighted-average number of ordinary shares outstanding during the period. The Company has excluded other potentially dilutive shares, which include outstanding options to purchase ordinary shares and unvested restricted share units (RSUs), from the weighted-average number of ordinary shares outstanding as their inclusion in the computation for all periods would be anti-dilutive due to net losses incurred. The following potentially dilutive ordinary share equivalents have been excluded from the calculation of diluted weighted-average shares outstanding for the years ended March 31, 2019, 2018 and 2017 as their effect would have been anti-dilutive for the periods presented (in thousands):",
+                "predicted_response": "by dividing net loss by the weighted-average number of ordinary shares outstanding during the period.",
+                "gold": "dividing net loss by the weighted-average number of ordinary shares outstanding during the period.",
+                "match": 0,
+                "bert_f1": [
+                    0.9690873026847839
+                ],
+                "bert_precision": [
+                    0.9638504385948181
+                ],
+                "bert_recall": [
+                    0.9743814468383789
+                ]
+            },
+            {
+                "instruction": "What was the non-cash extinguishment of sale-leaseback financing in 2017?",
+                "input": "Statements of cash flows additional information (in millions): Non-cash investing and financing activities and supplemental cash flow information are as follows:",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "How were operating segments defined as?",
+                "input": "R. Segment Information VMware operates in one reportable operating segment, thus all required financial segment information is included in the consolidated financial statements. Operating segments are defined as components of an enterprise for which separate financial information is evaluated regularly by the chief operating decision maker in deciding how to allocate resources and assessing performance. VMwares chief operating decision maker allocates resources and assesses performance based upon discrete financial information at the consolidated level. Revenue by type during the periods presented was as follows (table in millions):",
+                "predicted_response": "as discrete financial information at the consolidated level",
+                "gold": "components of an enterprise for which separate financial information is evaluated regularly by the chief operating decision maker in deciding how to allocate resources and assessing performance.",
+                "match": 0,
+                "bert_f1": [
+                    0.8549556136131287
+                ],
+                "bert_precision": [
+                    0.8761494159698486
+                ],
+                "bert_recall": [
+                    0.8347628712654114
+                ]
+            },
+            {
+                "instruction": "Which years does the table provide information for revenue by type?",
+                "input": "R. Segment Information VMware operates in one reportable operating segment, thus all required financial segment information is included in the consolidated financial statements. Operating segments are defined as components of an enterprise for which separate financial information is evaluated regularly by the chief operating decision maker in deciding how to allocate resources and assessing performance. VMwares chief operating decision maker allocates resources and assesses performance based upon discrete financial information at the consolidated level. Revenue by type during the periods presented was as follows (table in millions):",
+                "predicted_response": "2020, 2019, 2018",
+                "gold": "2020, 2019, 2018",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What was the license revenue in 2020?",
+                "input": "R. Segment Information VMware operates in one reportable operating segment, thus all required financial segment information is included in the consolidated financial statements. Operating segments are defined as components of an enterprise for which separate financial information is evaluated regularly by the chief operating decision maker in deciding how to allocate resources and assessing performance. VMwares chief operating decision maker allocates resources and assesses performance based upon discrete financial information at the consolidated level. Revenue by type during the periods presented was as follows (table in millions):",
+                "predicted_response": "3,181",
+                "gold": "3,181",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the amount of income taxes in FY2019?",
+                "input": "Net financial result and taxes 1 Adjustment of previous year according to explanation in notes. Net financial result The net financial result from continuing operations primarily comprises the interest result of 119 million (2017/18: 136 million) and the other financial result of 1 million (2017/18: 2 million). Net interest result improved significantly as a result of more favourable refinancing terms.",
+                "predicted_response": "298",
+                "gold": "298",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "When are subsequent costs included?",
+                "input": "Note 9. Non-current assets - property, plant and equipment Property, plant and equipment secured under finance leases Refer to note 24 for further information on property, plant and equipment secured under finance leases. Accounting policy for property, plant and equipment Plant and equipment are stated at cost less accumulated depreciation and any accumulated impairment losses. Cost includes expenditure that is directly attributable to the acquisition of the items. Subsequent costs are included in the assets carrying amount or recognised as a separate asset, as appropriate, only when it is probable that future economic benefits associated with the item will flow to the group and the cost of the item can be measured reliably. Plant and equipment are depreciated and leasehold improvements are amortised over their estimated useful lives using the straightline method. Assets held under finance lease are depreciated over their expected useful lives as owned assets or, where shorter, the term of the relevant lease.",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "When did the company start monitoring total annual recurring revenue? ",
+                "input": "Annual Recurring Revenue Beginning with the fourth quarter of 2018, we began monitoring a new operating metric, total annual recurring revenue (Total ARR), which is defined as the annualized value of all recurring revenue contracts active at the end of a reporting period. Total ARR includes the annualized value of subscriptions (Subscription ARR) and the annualized value of software support contracts related to perpetual licenses (Perpetual license support ARR) active at the end of a reporting period and does not include revenue reported as perpetual license or professional services in our consolidated statement of operations. We are monitoring these metrics because they align with how our customers are increasingly purchasing our solutions and how we are managing our business. These ARR measures should be viewed independently of revenue, unearned revenue, and customer arrangements with termination rights as ARR is an operating metric and is not intended to be combined with or replace those items. ARR is not an indicator of future revenue and can be impacted by contract start and end dates and renewal rates. ARR metrics as of December 31, 2019 and 2018 were as follows (unaudited):",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the change in the number of RSUs and cash-based awards outstanding at the end of the year in 2019 from 2018?",
+                "input": "Restricted Share Units The following table illustrates the number and WASP on date of award, and movements in, restricted share units (RSUs) and cash-based awards granted under the 2015 LTIP: RSUs and cash-based awards have a vesting period between two to five years, with no award vesting within the first 12 months of the grant.",
+                "predicted_response": "arithmetic",
+                "gold": "arithmetic",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the percentage of revenue in 2019 and 2018?",
+                "input": "Selling, General and Administrative The increase in selling, general and administrative in fiscal 2019 compared to fiscal 2018 was primarily due to higher variable costs on increased sales volumes, primarily related to increases in headcount costs and employee incentive compensation, as well as additional costs from the FRT acquisition, offset partially by a decrease in the amortization of intangible assets.",
+                "predicted_response": "arithmetic",
+                "gold": "table",
+                "match": 0,
+                "bert_f1": [
+                    0.9983631372451782
+                ],
+                "bert_precision": [
+                    0.9983631372451782
+                ],
+                "bert_recall": [
+                    0.9983631372451782
+                ]
+            },
+            {
+                "instruction": "What is the total equity in 2019?",
+                "input": "Statement of financial position Guarantees entered into by the parent entity in relation to the debts of its subsidiaries Altium Limited has provided financial guarantees in respect of credit card facilities and office leases amounting to US$261,518 (2018: US$283,752). Contingent liabilities The parent entity had no contingent liabilities as at 30 June 2019 and 30 June 2018. Capital commitments - Property, plant and equipment The parent entity had no capital commitments for property, plant and equipment at as 30 June 2019 and 30 June 2018. The accounting policies of the parent entity are consistent with those of the Group, as disclosed in the relevant notes to the financial statements.",
+                "predicted_response": "228,",
+                "gold": "228,144",
+                "match": 0,
+                "bert_f1": [
+                    0.8534641265869141
+                ],
+                "bert_precision": [
+                    0.8771645426750183
+                ],
+                "bert_recall": [
+                    0.8310106992721558
+                ]
+            },
+            {
+                "instruction": "What was the amount of Finished Goods in 2019?",
+                "input": "NOTES TO CONSOLIDATED FINANCIAL STATEMENTS (in thousands, except for share and per share data) NOTE 4  Inventories Inventories consist of the following:",
+                "predicted_response": "$9,447",
+                "gold": "9,447",
+                "match": 0,
+                "bert_f1": [
+                    0.9266662001609802
+                ],
+                "bert_precision": [
+                    0.9052590727806091
+                ],
+                "bert_recall": [
+                    0.9491102695465088
+                ]
+            },
+            {
+                "instruction": "What was the amount of Raw Materials in 2019?",
+                "input": "NOTES TO CONSOLIDATED FINANCIAL STATEMENTS (in thousands, except for share and per share data) NOTE 4  Inventories Inventories consist of the following:",
+                "predicted_response": "23,363",
+                "gold": "23,363",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What is included in the restructuring plans?",
+                "input": "4. Restructuring Activity From time to time, the Company approves and implements restructuring plans as a result of internal resource alignment, and cost saving measures. Such restructuring plans include terminating employees, vacating certain leased facilities, and cancellation of contracts. The following table presents the activity related to the plans, which is included in restructuring charges in the consolidated statements of operations: Included in employee separation expenses for the year ended December 31, 2017 is stock-based compensation from the acceleration of certain stock-based awards the Company assumed from Exar due to existing change in control provisions triggered upon termination or diminution of authority of former Exar executives of $5.1 million. Lease related and other charges primarily related to exiting certain redundant facilities.",
+                "predicted_response": "terminating employees, vacating certain leased facilities, and cancellation of contracts",
+                "gold": "terminating employees, vacating certain leased facilities, and cancellation of contracts.",
+                "match": 0,
+                "bert_f1": [
+                    0.9957794547080994
+                ],
+                "bert_precision": [
+                    0.9956234693527222
+                ],
+                "bert_recall": [
+                    0.9959355592727661
+                ]
+            },
+            {
+                "instruction": "How are the realized and unrealized losses recognized?",
+                "input": "Realized and unrealized losses of the cross currency swaps are recognized in earnings and reported in foreign exchange (loss) gain in the consolidated statements of loss. The effect of the gains (losses) on cross currency swaps on the consolidated statements of loss is as follows: The Company is exposed to credit loss to the extent the fair value represents an asset in the event of non-performance by the counterparties to the foreign currency forward contracts, and cross currency and interest rate swap agreements; however, the Company does not anticipate non-performance by any of the counterparties. In order to minimize counterparty risk, the Company only enters into derivative transactions with counterparties that are rated A- or better by Standard & Poors or A3 or better by Moodys at the time of the transaction. In addition, to the extent possible and practical, interest rate swaps are entered into with different counterparties to reduce concentration risk.",
+                "predicted_response": "Realized gains (losses) on maturity and/or partial termination of cross currency swap, Unreal",
+                "gold": "Realized and unrealized losses of the cross currency swaps are recognized in earnings and reported in foreign exchange (loss) gain in the consolidated statements of loss.",
+                "match": 0,
+                "bert_f1": [
+                    0.8661606311798096
+                ],
+                "bert_precision": [
+                    0.8668026924133301
+                ],
+                "bert_recall": [
+                    0.8655195236206055
+                ]
+            },
+            {
+                "instruction": "What is the percentage increase / (decrease) in the Unrealized (losses) gains from 2017 to 2018?",
+                "input": "Realized and unrealized losses of the cross currency swaps are recognized in earnings and reported in foreign exchange (loss) gain in the consolidated statements of loss. The effect of the gains (losses) on cross currency swaps on the consolidated statements of loss is as follows: The Company is exposed to credit loss to the extent the fair value represents an asset in the event of non-performance by the counterparties to the foreign currency forward contracts, and cross currency and interest rate swap agreements; however, the Company does not anticipate non-performance by any of the counterparties. In order to minimize counterparty risk, the Company only enters into derivative transactions with counterparties that are rated A- or better by Standard & Poors or A3 or better by Moodys at the time of the transaction. In addition, to the extent possible and practical, interest rate swaps are entered into with different counterparties to reduce concentration risk.",
+                "predicted_response": "Equation is malformed: (13\nException:'(' was never closed (<string>, line 1)",
+                "gold": "-74.31",
+                "match": 0,
+                "bert_f1": [
+                    0.8099797964096069
+                ],
+                "bert_precision": [
+                    0.7841031551361084
+                ],
+                "bert_recall": [
+                    0.8376226425170898
+                ]
+            },
+            {
+                "instruction": "How many years did the net accounts receivable exceed $200,000 thousand?",
+                "input": "Accounts Receivable The following is a summary of Accounts receivable (in thousands):",
+                "predicted_response": "arithmetic",
+                "gold": "arithmetic",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the company's main cost of revenue?",
+                "input": "Cost of Revenue, Gross Profit and Gross Margin Cost of revenue Cost of products revenue is primarily comprised of cost of third-party manufacturing services and cost of inventory for the hardware component of our products. Cost of products revenue also includes warehouse personnel costs, shipping costs, inventory write-downs, certain allocated facilities and information technology infrastructure costs, and expenses associated with logistics and quality control. Cost of services revenue is primarily comprised of personnel costs for our technical support, training and professional service teams. Cost of services revenue also includes the costs of inventory used to provide hardware replacements to end- customers under PCS contracts and certain allocated facilities and information technology infrastructure costs. A summary of our cost of revenue is as follows (dollars in thousands):",
+                "predicted_response": "Products",
+                "gold": "Products, Services",
+                "match": 0,
+                "bert_f1": [
+                    0.8654518127441406
+                ],
+                "bert_precision": [
+                    0.9187222123146057
+                ],
+                "bert_recall": [
+                    0.8180204629898071
+                ]
+            },
+            {
+                "instruction": "What was the domestic-state tax credit carryforwards as a ratio of domestic-federal tax credit carryforwards?",
+                "input": "Tax Carryforwards The amount and expiration dates of income tax net operating loss carryforwards and tax credit carryforwards, which are available to reduce future taxes, if any, as of August 31, 2019 are as follows: (1) Net of unrecognized tax benefits. (2) Calculated based on the deferral method and includes foreign investment tax credits",
+                "predicted_response": "2.07",
+                "gold": "0.08",
+                "match": 0,
+                "bert_f1": [
+                    0.9785580635070801
+                ],
+                "bert_precision": [
+                    0.9785580635070801
+                ],
+                "bert_recall": [
+                    0.9785580635070801
+                ]
+            },
+            {
+                "instruction": "What is the discount rate in 2019?",
+                "input": "The Company sponsors a defined benefit plan, the Woolworths Group Superannuation Plan (WGSP or the Plan), that provides superannuation benefits for employees upon retirement. The defined benefit plan is closed to new members. The assets of the WGSP are held in a sub-plan within AMP SignatureSuper that is legally separated from the Group. The WGSP invests entirely in pooled unit trust products where prices are quoted on a daily basis. The WGSP consists of members with defined benefit entitlements and defined contribution benefits. The plan also pays allocated pensions to a small number of pensioners. The following disclosures relate only to the Groups obligation in respect of defined benefit entitlements. The Group contributes to the WGSP at rates as set out in the Trust Deed and Rules and the Participation Deed between the Group and AMP Superannuation Limited. Members contribute to the WGSP at rates dependent upon their membership category. The plan provides lump sum defined benefits that are defined by salary and period of membership. An actuarial valuation was carried out at both reporting dates by Mr Nicholas Wilkinson, FIAA, Willis Towers Watson. The principal actuarial assumptions used for the purpose of the valuation are as follows:",
+                "predicted_response": "2.9",
+                "gold": "2.9",
+                "match": 1,
+                "bert_f1": [
+                    0.9999998807907104
+                ],
+                "bert_precision": [
+                    0.9999998807907104
+                ],
+                "bert_recall": [
+                    0.9999998807907104
+                ]
+            },
+            {
+                "instruction": "What is the average rate of price inflation for 2018 and 2019?",
+                "input": "The Company sponsors a defined benefit plan, the Woolworths Group Superannuation Plan (WGSP or the Plan), that provides superannuation benefits for employees upon retirement. The defined benefit plan is closed to new members. The assets of the WGSP are held in a sub-plan within AMP SignatureSuper that is legally separated from the Group. The WGSP invests entirely in pooled unit trust products where prices are quoted on a daily basis. The WGSP consists of members with defined benefit entitlements and defined contribution benefits. The plan also pays allocated pensions to a small number of pensioners. The following disclosures relate only to the Groups obligation in respect of defined benefit entitlements. The Group contributes to the WGSP at rates as set out in the Trust Deed and Rules and the Participation Deed between the Group and AMP Superannuation Limited. Members contribute to the WGSP at rates dependent upon their membership category. The plan provides lump sum defined benefits that are defined by salary and period of membership. An actuarial valuation was carried out at both reporting dates by Mr Nicholas Wilkinson, FIAA, Willis Towers Watson. The principal actuarial assumptions used for the purpose of the valuation are as follows:",
+                "predicted_response": "4.0",
+                "gold": "2",
+                "match": 0,
+                "bert_f1": [
+                    0.89254230260849
+                ],
+                "bert_precision": [
+                    0.8870861530303955
+                ],
+                "bert_recall": [
+                    0.8980658650398254
+                ]
+            },
+            {
+                "instruction": "What was the change in percentage of sales represented by gross profit between 2018 and 2019?",
+                "input": "Results of Continuing Operations The analysis presented below is organized to provide the information we believe will facilitate an understanding of our historical performance and relevant trends going forward, and should be read in conjunction with our Consolidated Financial Statements, including the notes thereto, in Item 8 \"Financial Statements and Supplementary Data\" of this Annual Report on Form 10 - K. The following table sets forth, for the periods indicated, the percentage of sales represented by certain items reflected in our Consolidated Statements of Operations:",
+                "predicted_response": "118.81",
+                "gold": "-10.9",
+                "match": 0,
+                "bert_f1": [
+                    0.9109528064727783
+                ],
+                "bert_precision": [
+                    0.9187076687812805
+                ],
+                "bert_recall": [
+                    0.9033277034759521
+                ]
+            },
+            {
+                "instruction": "What was the change in percentage of sales represented by provision for income taxes between 2018 and 2019?",
+                "input": "Results of Continuing Operations The analysis presented below is organized to provide the information we believe will facilitate an understanding of our historical performance and relevant trends going forward, and should be read in conjunction with our Consolidated Financial Statements, including the notes thereto, in Item 8 \"Financial Statements and Supplementary Data\" of this Annual Report on Form 10 - K. The following table sets forth, for the periods indicated, the percentage of sales represented by certain items reflected in our Consolidated Statements of Operations:",
+                "predicted_response": "289.0",
+                "gold": "-2.1",
+                "match": 0,
+                "bert_f1": [
+                    0.9017739295959473
+                ],
+                "bert_precision": [
+                    0.9080721139907837
+                ],
+                "bert_recall": [
+                    0.8955625295639038
+                ]
+            },
+            {
+                "instruction": "Which years does the table show?",
+                "input": "GreenSky, Inc. NOTES TO CONSOLIDATED FINANCIAL STATEMENTS  (Continued) (United States Dollars in thousands, except per share data, unless otherwise stated) Note 5. Accounts Receivable Accounts receivable consisted of the following as of the dates indicated",
+                "predicted_response": "2019, 2018",
+                "gold": "2019, 2018",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the percentage change in the total allowance for losses between 2018 and 2019?",
+                "input": "GreenSky, Inc. NOTES TO CONSOLIDATED FINANCIAL STATEMENTS  (Continued) (United States Dollars in thousands, except per share data, unless otherwise stated) Note 5. Accounts Receivable Accounts receivable consisted of the following as of the dates indicated",
+                "predicted_response": "26.58",
+                "gold": "41.67",
+                "match": 0,
+                "bert_f1": [
+                    0.9763449430465698
+                ],
+                "bert_precision": [
+                    0.9763449430465698
+                ],
+                "bert_recall": [
+                    0.9763449430465698
+                ]
+            },
+            {
+                "instruction": "What is the average Operating income for Fiscal 2018 and 2017?",
+                "input": "Consumer Cyber Safety segment Revenue increased $616 million due to a $639 million increase in revenue from sales of our identity and information protection products acquired at the end of fiscal 2017, offset by a $23 million decrease in revenue related to our consumer security products. Our revenue growth reflects the benefit of the shift to subscription-based contracts and bundling of our consumer products, which is helping to mitigate the trend of declining revenues from sales of stand-alone security products. Operating income increased $272 million primarily due to sales of our identity and information protection products, partially offset by higher related cost of sales and operating expenses.",
+                "predicted_response": "950625.0",
+                "gold": "975",
+                "match": 0,
+                "bert_f1": [
+                    0.8700252175331116
+                ],
+                "bert_precision": [
+                    0.872307538986206
+                ],
+                "bert_recall": [
+                    0.8677548170089722
+                ]
+            },
+            {
+                "instruction": "In which years was the basic earnings per share calculated for?",
+                "input": "16. Earnings Per Share The weighted-average number of shares outstanding used in the computations of basic and diluted earnings per share were as follows:",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the percentage change in indemnification receivable between 2018 and 2019?",
+                "input": "4. Other Current Assets Other current assets consist of (in thousands):",
+                "predicted_response": "-75.19",
+                "gold": "-75.19",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "In which year was the amount of commodity contracts the largest?",
+                "input": "Cash Flow Hedges For derivative instruments that are designated and qualify as cash flow hedges, the effective portion of the gain or loss on the derivative is reported as a component of AOCI and reclassified into earnings in the same period or periods during which the hedged transactions affect earnings or it becomes probable the forecasted transactions will not occur. The following is a summary of the gains (losses) related to cash flow hedges recognized during the years ended June 30, 2019, 2018 and 2017:",
+                "predicted_response": "2019",
+                "gold": "2019",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "Which factors are considered when constructing the long-term rate of return assumption for our defined benefit pension plans?",
+                "input": "Assumptions Weighted average actuarial assumptions used to determine costs for the plans for each period were as follows: The weighted-average expected long-term rate of return for the plan assets is 3.3%. The weighted-average expected longterm rate of return on plan assets is based on the interest rates guaranteed under the insurance contracts, and the expected rate ofreturn appropriate for each category of assets weighted for the distribution within the diversified investment fund. The assumptions used for the plans are based upon customary rates and practices for the location of the plans. Factors such as asset class allocations, long-term rates of return (actual and expected), and results of periodic asset liability modeling studies are considered when constructing the long-term rate of return assumption for our defined benefit pension plans.",
+                "predicted_response": "factors such as asset class allocations, long-term rates of return (actual and expected), and results of periodic asset liability modeling studies",
+                "gold": "Factors such as asset class allocations, long-term rates of return (actual and expected), and results of periodic asset liability modeling studies are considered when constructing the long-term rate of return assumption for our defined benefit pension plans.",
+                "match": 0,
+                "bert_f1": [
+                    0.9482675194740295
+                ],
+                "bert_precision": [
+                    0.9666943550109863
+                ],
+                "bert_recall": [
+                    0.9305300712585449
+                ]
+            },
+            {
+                "instruction": "What was the percentage change in the amount for Ireland?",
+                "input": "Credit risk The carrying amount of financial assets, previously recognised as loans and receivables under IAS 39 now classified as amortised cost under IFRS 9, represents the maximum credit exposure. The maximum exposure to credit risk at 31 March 2019 was 59.1m (2018: 56.5m). The maximum exposure to credit risk for trade receivables at the reporting date by geographic region was:",
+                "predicted_response": "-20.0",
+                "gold": "-20",
+                "match": 0,
+                "bert_f1": [
+                    0.9217594861984253
+                ],
+                "bert_precision": [
+                    0.9121547341346741
+                ],
+                "bert_recall": [
+                    0.9315687417984009
+                ]
+            },
+            {
+                "instruction": "What was the change in the land value from 2018 to 2019?",
+                "input": "Property, Plant and Equipment. Property, plant and equipment is stated at cost. Maintenance and repair costs are expensed as incurred. Depreciation is calculated using the straight-line method using estimated useful lives of 5 to 40 years for buildings and building improvements and 3 to 15 years for machinery and equipment. A summary of property, plant and equipment is shown below: Depreciation expense was $27.2 million, $22.5 million and $22.0 million in fiscal 2019, fiscal 2018 and fiscal 2017, respectively. As of April 27, 2019 and April 28, 2018, capital expenditures recorded in accounts payable totaled $6.4 million and $9.0 million, respectively.",
+                "predicted_response": "8.41",
+                "gold": "2.9",
+                "match": 0,
+                "bert_f1": [
+                    0.9479879140853882
+                ],
+                "bert_precision": [
+                    0.9479879140853882
+                ],
+                "bert_recall": [
+                    0.9479879140853882
+                ]
+            },
+            {
+                "instruction": "What were the Dividends on preferred stock in 2017?",
+                "input": "AMERICAN TOWER CORPORATION AND SUBSIDIARIES NOTES TO CONSOLIDATED FINANCIAL STATEMENTS (Tabular amounts in millions, unless otherwise disclosed) 18. EARNINGS PER COMMON SHARE The following table sets forth basic and diluted net income per common share computational data for the years ended December 31, (shares in thousands, except per share data):",
+                "predicted_response": "(9.4)",
+                "gold": "(87.4)",
+                "match": 0,
+                "bert_f1": [
+                    0.9670202732086182
+                ],
+                "bert_precision": [
+                    0.9670202732086182
+                ],
+                "bert_recall": [
+                    0.9670202732086182
+                ]
+            },
+            {
+                "instruction": "What was the change in Dilutive securities between 2018 and 2019?",
+                "input": "AMERICAN TOWER CORPORATION AND SUBSIDIARIES NOTES TO CONSOLIDATED FINANCIAL STATEMENTS (Tabular amounts in millions, unless otherwise disclosed) 18. EARNINGS PER COMMON SHARE The following table sets forth basic and diluted net income per common share computational data for the years ended December 31, (shares in thousands, except per share data):",
+                "predicted_response": "23409",
+                "gold": "-153",
+                "match": 0,
+                "bert_f1": [
+                    0.8948253989219666
+                ],
+                "bert_precision": [
+                    0.8944412469863892
+                ],
+                "bert_recall": [
+                    0.8952099084854126
+                ]
+            },
+            {
+                "instruction": "What was the change in the Basic net income per common share between 2018 and 2019?",
+                "input": "Note 2. Business Acquisitions Acquisition of Microsemi The following unaudited pro-forma consolidated results of operations for the fiscal year ended March 31, 2019 and 2018 assume the closing of the Microsemi acquisition occurred as of April 1, 2017. The pro-forma adjustments are mainly comprised of acquired inventory fair value costs and amortization of purchased intangible assets. The pro-forma results of operations are presented for informational purposes only and are not indicative of the results of operations that would have been achieved if the acquisition had taken place on April 1, 2017 or of results that may occur in the future (in millions except per share data):",
+                "predicted_response": "0.96",
+                "gold": "5.56",
+                "match": 0,
+                "bert_f1": [
+                    0.9608005285263062
+                ],
+                "bert_precision": [
+                    0.9608005285263062
+                ],
+                "bert_recall": [
+                    0.9608005285263062
+                ]
+            },
+            {
+                "instruction": "What is the total accrued liabilities as at 31 December 2019?",
+                "input": "Accrued Liabilities Accrued liabilities consisted of the following (in thousands):",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the average Research and development funding?",
+                "input": "In 2019 we recognized other income, net of expenses, of $103 million, increasing compared to $53 million in 2018, mainly benefitting from the grants associated with the programs part of the European Commission IPCEI in Italy and in France, partially offset by a higher level of start-up costs associated with the production ramp up of the 200 mm fab recently acquired from Micron Technology Inc. in Singapore. In 2018 we recognized other income, net of expenses, of $53 million, slightly decreasing compared to $55 million in 2017, mainly due to lower level of R&D grants.",
+                "predicted_response": "6889.0",
+                "gold": "83",
+                "match": 0,
+                "bert_f1": [
+                    0.8389526605606079
+                ],
+                "bert_precision": [
+                    0.8231106400489807
+                ],
+                "bert_recall": [
+                    0.8554162979125977
+                ]
+            },
+            {
+                "instruction": "In which year was the amount of Property, Plant, and Equipment, Net larger?",
+                "input": "7. Property, Plant, and Equipment, Net Net property, plant, and equipment consisted of the following: Depreciation expense was $510 million, $487 million, and $442 million in fiscal 2019, 2018, and 2017, respectively.",
+                "predicted_response": "2019",
+                "gold": "2019",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "What was the percentage change in Property, Plant, and Equipment, Net in 2019 from 2018?",
+                "input": "7. Property, Plant, and Equipment, Net Net property, plant, and equipment consisted of the following: Depreciation expense was $510 million, $487 million, and $442 million in fiscal 2019, 2018, and 2017, respectively.",
+                "predicted_response": "2.2",
+                "gold": "2.2",
+                "match": 1,
+                "bert_f1": [
+                    1.0
+                ],
+                "bert_precision": [
+                    1.0
+                ],
+                "bert_recall": [
+                    1.0
+                ]
+            },
+            {
+                "instruction": "What is the cash flow from operations in 2019?",
+                "input": "The company has consistently generated strong cash flow from operations, providing a source of funds ranging between $14.8 billion and $16.7 billion per year over the past three years. The company provides for additional liquidity through several sources: maintaining an adequate cash balance, access to global funding sources, committed global credit facilities and other committed and uncommitted lines of credit worldwide. The following table provides a summary of the major sources of liquidity for the years ended December 31, 2017 through 2019.",
+                "predicted_response": "$14.8",
+                "gold": "$14.8 billion",
+                "match": 0,
+                "bert_f1": [
+                    0.9410811066627502
+                ],
+                "bert_precision": [
+                    0.9588688015937805
+                ],
+                "bert_recall": [
+                    0.9239413142204285
+                ]
+            },
+            {
+                "instruction": "What caused the increase in interest income?",
+                "input": "Other income (expense) nmnot meaningful Other income (expense), net changed $9.9 million in the year ended March 31, 2018 compared to the year ended March 31, 2017, which was primarily attributable to a change of $10.4 million in foreign exchange expense which was primarily attributable to the re-measurement of short-term intercompany balances denominated in currencies other than the functional currency of our operating units. The increase in interest income is primarily due to interest on investments.",
+                "predicted_response": "primarily attributable to the re-measurement of short-term intercompany balances denominated in currencies other than the functional currency of our operating units.",
+                "gold": "primarily due to interest on investments.",
+                "match": 0,
+                "bert_f1": [
+                    0.8726110458374023
+                ],
+                "bert_precision": [
+                    0.841456413269043
+                ],
+                "bert_recall": [
+                    0.9061614274978638
+                ]
+            },
+            {
+                "instruction": "What was the working capital in 2019?",
+                "input": "Liquidity and Capital Resources Working Capital The following table summarizes our cash and cash equivalents, accounts receivable, net and working capital, for the periods indicated (in thousands): We define working capital as current assets minus current liabilities. Our cash and cash equivalents as of December 31, 2019 are available for working capital purposes. We do not enter into investments for trading purposes, and our investment policy is to invest any excess cash in short term, highly liquid investments that limit the risk of principal loss; therefore, our cash and cash equivalents are held in demand deposit accounts that generate very low returns.",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "Which years does the table provide information for The rollforward of allowance for doubtful accounts?",
+                "input": "The allowance for doubtful accounts represents management's estimate of uncollectible balances. We determine the allowance based on known troubled accounts, historical experience and other currently available evidence. We write off trade receivables when the likelihood of collection of a trade receivable balance is considered remote. The rollforward of allowance for doubtful accounts is as follows (in millions):",
+                "predicted_response": "2019, 2018, 2017",
+                "gold": "2019, 2018, 2017",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "What is the 2019 taxation recoverable falling due within one year ?",
+                "input": "3. Debtors Accounting policies Amounts owed to subsidiaries are classified and recorded at amortised cost (2018: classified as loans and receivables) and reduced by allowances for expected credit losses. Estimate future credit losses are first recorded on initial recognition of a receivable and are based on estimated probability of default. Individual balances are written off when management deems them not to be collectible. Derivative financial instruments are measured at fair value through profit and loss. Note: 1 Amounts owed by subsidiaries are unsecured, have no fixed date of repayment and are repayable on demand with sufficient liquidity in the group to flow funds if required. Therefore expected credit losses are considered to be immateria",
+                "predicted_response": "233",
+                "gold": "233",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the 2019 average total amount falling due after more than one year?",
+                "input": "3. Debtors Accounting policies Amounts owed to subsidiaries are classified and recorded at amortised cost (2018: classified as loans and receivables) and reduced by allowances for expected credit losses. Estimate future credit losses are first recorded on initial recognition of a receivable and are based on estimated probability of default. Individual balances are written off when management deems them not to be collectible. Derivative financial instruments are measured at fair value through profit and loss. Note: 1 Amounts owed by subsidiaries are unsecured, have no fixed date of repayment and are repayable on demand with sufficient liquidity in the group to flow funds if required. Therefore expected credit losses are considered to be immateria",
+                "predicted_response": "8758640.25",
+                "gold": "2959.5",
+                "match": 0,
+                "bert_f1": [
+                    0.8843188881874084
+                ],
+                "bert_precision": [
+                    0.8631241321563721
+                ],
+                "bert_recall": [
+                    0.9065808057785034
+                ]
+            },
+            {
+                "instruction": "What is the difference between the Balance at end of period for 2018 and 2019?",
+                "input": "The following table shows the activity of our U.S. and international plan assets, which are measured at fair value using Level 3 inputs. (1) Balances as of December 31, 2018 have been revised from our 2018 Form 10-K filing to reflect changes in leveling classification of specific funds. These reclassifications did not impact the fair value of any of our pension plan assets. (2) Purchases of Level 3 assets in 2018 primarily represent the purchase of bulk annuity contracts (buy-ins) in some of our international plans.",
+                "predicted_response": "arithmetic",
+                "gold": "arithmetic",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the Total other (expense) income, net in 2017?",
+                "input": "Results of Operations: Years Ended December 31, 2018, versus Year Ended December 31, 2017 (Amounts in thousands, except percentages and per share amounts): Results of Operations: Years Ended December 31, 2018, versus Year Ended December 31, 2017 (Amounts in thousands, except percentages and per share amounts): Other income and expense items are summarized in the following table: Interest expense decreased in the year ended December 31, 2018, versus the same period in 2017 primarily due to lower debt balances, a reduction in interest related to interest rate swaps, and a one-time charge related to a liability that was settled in 2017. Interest income increased due to higher interest rates. Other expense in the year ended December 31, 2018, was driven by foreign currency translation losses mainly due to the appreciation of the U.S. Dollar compared to the Chinese Renminbi and the Euro. Other income in the year ended December 31, 2017 was driven mainly by foreign currency translation gains due to the depreciation of the U.S. Dollar compared to the Chinese Renminbi and the Euro.",
+                "predicted_response": "3,817",
+                "gold": "1,758",
+                "match": 0,
+                "bert_f1": [
+                    0.9284831285476685
+                ],
+                "bert_precision": [
+                    0.9144433736801147
+                ],
+                "bert_recall": [
+                    0.9429606795310974
+                ]
+            },
+            {
+                "instruction": "What is the difference in the total accrued liabilities between 2018 and 2019?",
+                "input": "10. Accrued Liabilities Accrued liabilities at April 30, 2019 and 2018, respectively, consisted of the following (in thousands):",
+                "predicted_response": "24025",
+                "gold": "155",
+                "match": 0,
+                "bert_f1": [
+                    0.8889939785003662
+                ],
+                "bert_precision": [
+                    0.8500574827194214
+                ],
+                "bert_recall": [
+                    0.9316686391830444
+                ]
+            },
+            {
+                "instruction": "What is the change in balance at start of year from 2018 to 2019?",
+                "input": "NOTE 14. PROVISION FOR WARRANTY The changes in the amount of provision for warranty are as follows: Costs of warranty include the cost of labor and materials to repair a product during the warranty period. The main term of the warranty period is one year. The Company accrues for the estimated cost of the warranty on its products shipped in the provision for warranty, upon recognition of the sale of the product. The costs are estimated based on actual historical expenses incurred and on estimated future expenses related to current sales, and are updated periodically. Actual warranty costs are charged against the provision for warranty.",
+                "predicted_response": "arithmetic",
+                "gold": "arithmetic",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What were the finance leases for 2022?",
+                "input": "The following represents VMwares future minimum lease payments under non-cancellable operating and finance leases as of January 31, 2020 (table in millions): (1) Total lease liabilities as of January 31, 2020 excluded legally binding lease payments for leases signed but not yet commenced of $361 million.",
+                "predicted_response": "6",
+                "gold": "6",
+                "match": 1,
+                "bert_f1": [
+                    0.9999999403953552
+                ],
+                "bert_precision": [
+                    0.9999999403953552
+                ],
+                "bert_recall": [
+                    0.9999999403953552
+                ]
+            },
+            {
+                "instruction": "How many years did the company have cash proceeds received that exceeded $5,000 million?",
+                "input": "Trade Accounts Receivable Sale Programs In connection with the trade accounts receivable sale programs, the Company recognized the following (in millions): (1) Recorded to other expense within the Consolidated Statements of Operations.",
+                "predicted_response": "4076361",
+                "gold": "2",
+                "match": 0,
+                "bert_f1": [
+                    0.8379528522491455
+                ],
+                "bert_precision": [
+                    0.787264347076416
+                ],
+                "bert_recall": [
+                    0.8956179022789001
+                ]
+            },
+            {
+                "instruction": "What is included in Service delivery costs?",
+                "input": "(1) Include cost of equipment sold, content and programming costs, payments to other carriers, franchise fees and network costs. (2) Include advertising and marketing expenses, selling costs, billing expenses, bad debts and collection expenses. (3) Include office building expenses, professional service fees, Canadian Radio-television and Telecommunications Commission (CRTC) fees, losses and gains on disposals and write-offs of property, plant and equipment and other administrative expenses. 9. OPERATING EXPENSES",
+                "predicted_response": "Salaries, employee benefits and outsourced services, Service delivery costs(1), Customer related costs(2), Other external purchases(3)",
+                "gold": "Include cost of equipment sold, content and programming costs, payments to other carriers, franchise fees and network costs.",
+                "match": 0,
+                "bert_f1": [
+                    0.8554728031158447
+                ],
+                "bert_precision": [
+                    0.8319612741470337
+                ],
+                "bert_recall": [
+                    0.8803518414497375
+                ]
+            }
+        ],
+        "ott-qa": [
+            {
+                "instruction": "Who developed the 2017 game with Nathan Fillion in it ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "Who discovered the chemical element named after the Earth ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "According to oral tradition which dynasty established the home country of FIFA Order of Merit administrator Yidnekatchew Tessema ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What city is the Malaysian football team based in that received the transfer Abdul Hadi Yahya ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the final score of the club from Brazil , Argentina or Uruguay that has won 26 Torneo de la URBA championships ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the recommended daily intake of the vitamin also known as B9 ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the career year of the English National Rugby Team player who is currently the head coach of this hometown amateur club Featherstone Lions ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the type of the state symbol for Texas that has a cage-like fused-ring structure ( truncated icosahedron ) ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the name of the House member of the 40th Parliament of Canada person from electoral district that was founded in 1903 ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was unsuccessfully proposed to be built on the site of the hospital that was in the Oregon city originally founded as Boones Landing ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the name of the Canadian city for the building that housed a bell that was from the Frog Lake Mission ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "How 1990 Minnesota Vikings draft players are from college teams that are currently part of the SEC conference ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the capacity of a 2010 Armenian Premier League stadium that is located in the province called Armenian Switzerland ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What is the name of the twin brother of the player , playing in the National Soccer League ( South Africa ) , from 1994 ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            },
+            {
+                "instruction": "What was the book by the 1980 College Baseball All-America Team catcher from Vanderbilt ?",
+                "input": "",
+                "predicted_response": "table",
+                "gold": "table",
+                "match": 1,
+                "bert_f1": [
+                    1.0000001192092896
+                ],
+                "bert_precision": [
+                    1.0000001192092896
+                ],
+                "bert_recall": [
+                    1.0000001192092896
+                ]
+            }
+        ]
+    }
+}
