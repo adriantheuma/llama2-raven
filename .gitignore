@@ -12,5 +12,6 @@ test_data.json
 todo.txt
 .venv
 .vscode
-/training-data/
-/weights/
+weights/
+logs*/
+gradio*/
