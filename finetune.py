@@ -238,17 +238,21 @@ def train(
         train_data = dataset["train"].shuffle().map(generate_and_tokenize_prompt)
         val_data = None
 
-    # get all the lengths and flatten
-    lengths = [item for sublist in val_data["length"] for item in sublist]
-    # select only those less than 1024 in length after tokenisation
-    idx = (np.asarray(lengths) < 1024).nonzero()[0]
-    val_data = val_data.select(idx)
-
+    print(f"Length of train dataset before select: {train_data.num_rows}")
     # get all the lengths and flatten
     lengths = [item for sublist in train_data["length"] for item in sublist]
     # select only those less than 1024 in length after tokenisation
     idx = (np.asarray(lengths) < 1024).nonzero()[0]
     train_data = train_data.select(idx)
+    print(f"Length of train dataset after select: {train_data.num_rows}")
+
+    print(f"Length of validation dataset before select: {val_data.num_rows}")
+    # get all the lengths and flatten
+    lengths = [item for sublist in val_data["length"] for item in sublist]
+    # select only those less than 1024 in length after tokenisation
+    idx = (np.asarray(lengths) < 1024).nonzero()[0]
+    val_data = val_data.select(idx)
+    print(f"Length of validation dataset after select: {val_data.num_rows}")
 
     # lengths = []
     # for data in train_data:
