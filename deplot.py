@@ -65,7 +65,7 @@ def main(
             gr.Markdown(
             """
                 <p style="text-align:centre; font-size:3em;">            
-                    📈 Image convertion test 📈        
+                    📈 Image conversion test 📈        
                 </p>
             """
             )            
@@ -105,7 +105,7 @@ def main(
         submit_btn.click(fn=to_table, inputs=inputs, outputs=outputs)
 
     demo.queue().launch(
-        server_name="0.0.0.0"        
+        server_name="0.0.0.0", share=True        
     )
 
 if __name__ == "__main__":
