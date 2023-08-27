@@ -4,7 +4,7 @@ api = HfApi()
 
 api.upload_folder(
     folder_path="weights/",
-    repo_id="unwilledset/raven-13b-chat-d7",
+    repo_id="unwilledset/raven-13b-chat-d8",
     repo_type="model",
     ignore_patterns="checkpoint*", # Ignore all checkpoints
 )

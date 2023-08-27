@@ -65,6 +65,9 @@ class Prompter(object):
                 table_df[header[i]] = table_df[header[i]].astype("float64")
         
         return table_df
+    
+
+    
 
     def __clean_equation(self, eq: str) -> str:
         cleaned_eq = re.sub(r"[,%\$]", "", eq)
@@ -102,8 +105,9 @@ class Prompter(object):
             # if the pattern of the equation signifies 
             # that this is a percentage, multiply the
             # result by 100
-            result *= 100 if pattern.match(eq) else result
-            
+            if pattern.match(cleaned_eq):
+                result *= 100              
+
             result = round(result, 2)
         except Exception as e:
             result = f"Equation is malformed: {cleaned_eq}\nException:{e}"

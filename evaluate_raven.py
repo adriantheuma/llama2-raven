@@ -10,6 +10,8 @@ import torch
 from peft import PeftModel
 from datasets import load_dataset
 from evaluate import load
+import pandas as pd
+
 
 from transformers import (
     GenerationConfig, 
@@ -38,12 +40,12 @@ bertscore = load("bertscore")
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d7",
+    lora_weights: str = "unwilledset/raven-13b-chat-d8",
     inference_mode: bool = True,
     force_download: bool = False,
     prompt_template: str = "raven_prompt_template", 
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-7",
+    dataset_subset: str = "dataset-8",
     dataset_split: str = "test",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     device_map: str = "auto",
@@ -55,8 +57,8 @@ def main(
     top_p: float = 0.75,
     top_k: int = 10,
     num_beams: int = 2,
-    max_new_tokens: int = 2048,
-    report_every_steps: int = 20,
+    max_new_tokens: int = 1024,
+    report_every_steps: int = 5,
     add_eos_token: bool = True,
     max_length: int = 1024,
 ):
@@ -134,42 +136,40 @@ def main(
 
     # dataset = dataset.select(range(0,15))
 
-    def save_evaluation_results(prediction_results, console_output: bool = False):
-        results_dict = {}
-        total_num_match = 0
-        total_num_samples = 0
 
-        for source in prediction_results:
-            num_match = sum(res["match"] for res in prediction_results[source])
-            num_samples = len(prediction_results[source])
-            results_dict.setdefault(source, {})
-            results_dict[source] = {
-                "num_samples": num_samples,
-                "num_match": num_match,
-                "accuracy": num_match / num_samples,
-            }
-            total_num_match += num_match
-            total_num_samples += num_samples
+    def tokenize(prompt):
+        result = tokenizer(
+            prompt, 
+            truncation=True,
+            max_length=max_length,
+            padding=False,
+            return_tensors="pt",
+            return_length=True
+        )
 
-        results_dict["overall"] = {
-            "num_samples": total_num_samples,
-            "num_match": total_num_match,
-            "accuracy": total_num_match / total_num_samples,
-        }
+        return result
 
-        eval_dict = {
-            "base_model_config": base_config,
-            "lora_config": lora_config,
-            "evaluation_config": generation_config_dict,
-            "results": results_dict,
-            "predictions": prediction_results
-        }
-
-        if console_output:
-            print(results_dict)
+    # function to generate and tokenise the prompt    
+    def generate_and_tokenize_prompt(data_point):
         
+        # generate the prompt using the selected template
+        prompt = prompter.generate_inference_prompt(
+            instruction=data_point["instruction"],
+            input=data_point["input"],
+            data=data_point["data"],
+            template=data_point["template"]
+        )
+
+        # tokenize and return    
+        return tokenize(prompt)
+
+
+
+    def save_evaluation_results(prediction_results, results_df, console_output: bool = False):
+        results_df = pd.concat([results_df, pd.DataFrame(prediction_results)], ignore_index=True)
+                
         save_location = str.format(
-            f"{evaluation_dir}/{base_config['_name_or_path']}/{lora_config['peft_type']}/{lora_config['r']}/{dataset_subset}"
+            f"{evaluation_dir}/{base_config['_name_or_path']}/{lora_weights}/"
         )
 
         dir_name = os.path.dirname(save_location)
@@ -177,14 +177,14 @@ def main(
             os.makedirs(dir_name)
 
         now = datetime.now()
-        filename = f"results_{now.strftime('%Y%m%d_%H%M%S')}.json"    
+        filename = f"results_{now.strftime('%Y%m%d_%H')}.csv"
         path = os.path.join(save_location, filename)
 
-        # save the fule
-        with open(path, "w") as f:
-            json.dump(eval_dict, f, indent=4)
+        # save the file
+        results_df.to_csv(path, index=False, quotechar='"')  
 
-    
+
+
     def evaluate(
         instruction: str,
         input: Union[None, str] = None,
@@ -204,7 +204,7 @@ def main(
             return_length=True
         )
         length = inputs["length"].item()    
-        if length <= 512:
+        if length < 1024:
             input_ids = inputs["input_ids"].to(device)
             generation_config = GenerationConfig(**generation_config_dict)       
 
@@ -222,18 +222,26 @@ def main(
                 "result": "not evaluated"
             }
 
-
-    prediction_results = {}
+    prediction_results = []
 
     pbar = tqdm(desc="Evaluating test samples", total=dataset.num_rows)
     steps = 0
-    
+
+    results_df = pd.DataFrame(
+        columns=["source", "template", "instruction", "input", "data", "gold", "gold_eval", "pred", "pred_eval"])
+
+
+    #eval_data = (dataset.map(generate_and_tokenize_prompt))
+
     for sample in dataset:        
         instruction = sample["instruction"]
         input = sample["input"]
         data = sample["data"]
         template = sample["template"]
-       
+        source = sample["source"]
+        gold_eval = sample["derivation_eval"] if sample["derivation_eval"] else sample["derivation_sql"]
+        gold = sample["output"]
+
         prediction = evaluate(
             instruction=instruction, 
             input=input,
@@ -243,31 +251,30 @@ def main(
         )
 
         if prediction["result"] != "not evaluated":
-            gold = sample["output"]
-            predicted = prediction["result"]
-        
-            bert_score = bertscore.compute(predictions=[predicted], references=[gold], lang="en")
-            
-            prediction_results.setdefault(sample["source"], [])
+            pred = prediction["result"]
+            pred_eval = prediction["eval"]
 
-            prediction_results[sample["source"]].append({
-                    "instruction": instruction,
-                    "input": input,
-                    "predicted_response": predicted,
-                    "gold": gold,
-                    "match": 1 if predicted == gold else 0,
-                    "bert_f1": bert_score["f1"],
-                    "bert_precision": bert_score["precision"],
-                    "bert_recall": bert_score["recall"]
-                }
-            )
-        pbar.update()
+            # bert_score = bertscore.compute(predictions=[predicted], references=[gold], lang="en")
         
+            prediction_results.append({
+                "source": source,
+                "template": template,
+                "instruction": instruction,
+                "input": input,
+                "data": data,
+                "gold": gold,
+                "gold_eval": gold_eval,
+                "pred": pred,
+                "pred_eval": pred_eval
+            })
+            
+        pbar.update()
+
         steps+=1
         if steps % report_every_steps == 0: 
-            save_evaluation_results(prediction_results, console_output=True)
+            save_evaluation_results(prediction_results, results_df, console_output=True)
 
-    save_evaluation_results(prediction_results, console_output=True)
+    save_evaluation_results(prediction_results, results_df, console_output=True)
 
 if __name__ == "__main__":
     fire.Fire(main)

@@ -1,21 +1,30 @@
 from arepl_dump import dump
 import re
 import numpy as np
-
-e = eval("7>4")
-
-
-pattern = re.compile(r"^\(.*-.*\).*/.*$", re.IGNORECASE)
-m = pattern.match("(123 - 456)    /    456")
-
-pattern = re.compile(r"[,%\$]", re.IGNORECASE)
-s = "$1,2456-$1,235"
-sub = re.sub(r"[,%\$]", "", s)
-
-a = np.array([20,10,3,5,6,12,7,8,9,10])
-
-b = (a < 4).nonzero()[0]
+import pandas as pd
+import json
 
 
+
+s = "Country | Share of children who report being bullied, 2015 <0x0A> Solomon Islands | 67 <0x0A> Lithuania | 52 <0x0A> Jordan | 41 <0x0A> Russia | 33 <0x0A> Honduras | 32 <0x0A> Finland | 28 <0x0A> Hungary | 24 <0x0A> Myanmar | 19 <0x0A> Tajikistan | 7"
+
+def split_row(row, splitter="|"):
+    return list(map(str.strip, row.split(splitter)))
+
+rows = s.split("<0x0A>")
+
+dict = {}
+dict["header"] = split_row(rows[0])
+dict["rows"] = [split_row(row) for row in rows[1:]]
+dict["types"] = []
+
+for i in range(len(dict["header"])):
+    c = [r[i] for r in dict["rows"]]
+    dict["types"].append("real" 
+                         if all(v.isnumeric() for v in c) 
+                         else "text"
+                        )
+
+j = json.dumps(dict)
 
 

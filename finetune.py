@@ -40,24 +40,24 @@ def train(
     dataset_name: str = "unwilledset/raven-data",
     dataset_subset: str = "dataset-8",
     dataset_split: str = "train",
-    download_mode: str = "force_redownload", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
+    download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
     prompt_template_name: str = "raven_prompt_template",  # The prompt template to use, will default to alpaca.
     
     # training/ model hyperparams
     # batch size = per_device_batch_size * gradient_accumulation_steps
-    per_device_train_batch_size: int = 2,
-    per_device_eval_batch_size: int = 2,
-    gradient_accumulation_steps: int = 64, 
+    per_device_train_batch_size: int = 1,
+    per_device_eval_batch_size: int = 1,
+    gradient_accumulation_steps: int = 128, 
     
     num_train_epochs: int = 5,
     learning_rate: float = 3e-4,
     val_set_size: int = 0.1, # 10%
     logging_steps: int = 1,
     optim: str = "adamw_torch",
-    eval_steps: int = 100, 
-    save_steps: int = 100,
+    eval_steps: int = 200, 
+    save_steps: int = 200,
     warmup_steps: int = 100,
     fp16: bool = True,
     group_by_length: bool = False,  # faster, but produces an odd training loss curve
