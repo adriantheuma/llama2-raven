@@ -34,9 +34,9 @@ except:  # noqa: E722
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d7",
+    lora_weights: str = "unwilledset/raven-13b-chat-d8",
     dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-7",
+    dataset_subset: str = "dataset-8",
     dataset_split: str = "test",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
 
@@ -161,6 +161,7 @@ def main(
         instruction,
         input=None,
         data=None,
+        template=None,
         temperature=0.1,
         top_p=0.75,
         top_k=40,
@@ -177,14 +178,14 @@ def main(
             num_beams=num_beams,
             **kwargs,
         )
-
-        template, _, _, _ = which_prompt(
-            instruction=instruction,
-            input=input,
-            data=data,
-            generation_config=generation_config,
-            max_new_tokens=max_new_tokens,
-        )
+        if template == "auto":
+            template, _, _, _ = which_prompt(
+                instruction=instruction,
+                input=input,
+                data=data,
+                generation_config=generation_config,
+                max_new_tokens=max_new_tokens,
+            )
 
         if template not in ["generic", "script", "arithmetic", "table"]:
             template = "generic"
@@ -251,23 +252,22 @@ def main(
     
 
     # Load the test dataset
-    dataset = load_dataset(
-        path=dataset_name, 
-        name=dataset_subset,        
-        split=dataset_split,
-        download_mode=download_mode
-    )
+    examples = []
+    if load_model:
+        dataset = load_dataset(
+            path=dataset_name, 
+            name=dataset_subset,        
+            split=dataset_split,
+            download_mode=download_mode
+        )
 
-    examples = [
-        [
-            d["instruction"],
-            d["input"],
-            d["data"],
-            d["output"]
-        ]
-        for d in dataset
-    ]
+        dataset_df = dataset.to_pandas()
+        alpaca_df = dataset_df[(dataset_df["source"] == "alpaca") & (dataset_df["template"] != "template")]
 
+        
+        examples_iloc = [9, 10, 11, 14, 15, 20, 21, 22, 26, 5125, 5134, 5137]
+        examples_columns = ["instruction", "input", "data", "output"]
+        examples = dataset_df[examples_columns].iloc[examples_iloc].values.tolist()
 
 
     demo = gr.Blocks(
@@ -279,7 +279,7 @@ def main(
 
     with demo:    
         with gr.Row(equal_height=True):   
-            with gr.Column(scale=15):    
+            with gr.Column(scale=10):    
                 with gr.Row(variant="panel", ):      
                     gr.Markdown(
                     """
@@ -288,7 +288,7 @@ def main(
                         </p>
                     """
                     )
-            with gr.Column(scale=85):    
+            with gr.Column(scale=90):    
                 with gr.Row(variant="panel"):      
                     gr.Markdown(
                         """<br/>
@@ -299,7 +299,7 @@ def main(
                         """
                     )
         with gr.Row():   
-            with gr.Column(scale=44):     
+            with gr.Column(scale=47):     
                 with gr.Row(variant="panel"):                     
                     instruction = gr.components.Textbox(
                         lines=2,
@@ -319,70 +319,69 @@ def main(
                         placeholder=
                             'Provide data related to the instruction. This needs to be in the following format to be interpreted correctly\n{\n\t"header": ["H1", "H2"],\n\t"rows": [["R1D1", "R1D2"], ["R2D1", "R2D2"]],\n\t"types: ["text", "text"]\n}',                        
                     )   
-                with gr.Row(variant="panel"):     
-                    expected_result = gr.components.Textbox(
-                        lines=1, 
-                        label="Expected result", 
-                        placeholder=
-                            'This is the expected result - will be populated when one of the example below is chosen',                        
-                    )   
+                with gr.Row(variant="panel"):
+                    template = gr.Radio(["auto", "generic", "script", "equation", "table"], 
+                                        label="Template", 
+                                        value="auto",
+                                        info="Force a template or auto detect"
+                    )
+                
                 
                 with gr.Row():
                     clear_btn = gr.ClearButton(value="Clear")
                     submit_btn = gr.components.Button(value="Submit", variant="primary")
                     
                     
-            with gr.Column(scale=44):
+            with gr.Column(scale=47):
+                with gr.Row(variant="panel"):     
+                    expected_result = gr.components.Textbox(
+                        lines=1, 
+                        label="Ground truth/ reference answer", 
+                        info=
+                            'This expected result will be populated when one of the examples below is chosen',
+                    )   
                 with gr.Row(variant="panel"):    
                     result_out = gr.components.Textbox(
-                        lines=2,
-                        label="Result",
+                        lines=1,
+                        label="Predicted model output",
                     )
-                with gr.Column(scale=50):
-                    with gr.Row(variant="panel"):    
-                        eval_out = gr.components.Textbox(
-                            lines=2,
-                            label="Evaluation",
-                        )
-                with gr.Column(scale=50):
-                    with gr.Row(variant="panel"):    
+                with gr.Row(variant="panel"):    
+                    with gr.Column():                                
                         template_out = gr.components.Textbox(
-                            lines=2,
+                            lines=1,
                             label="Template used",
                         )
-                with gr.Row(variant="panel"):    
-                    raw_out = gr.components.Textbox(
-                        lines=2,
-                        label="Raw output",
-                    )
+                        eval_out = gr.components.Textbox(
+                            lines=2,
+                            label="Evaluation/ Reasoning",
+                        )                
+                        # raw_out = gr.components.Textbox(
+                        #     lines=5,
+                        #     label="Raw output",
+                        # )
                 with gr.Row():    
                     flag_btn = gr.Button("Flag this output", variant="stop")
                 
-            with gr.Column(scale=12):
-                with gr.Row(variant="panel"):    
-                    temperature = gr.components.Slider(
-                        minimum=0, maximum=1, value=0.1, label="Temperature", info="Effects model diversity at the expense of straying from the context."
-                    )
-                with gr.Row(variant="panel"):    
-                    top_k = gr.components.Slider(
-                        minimum=0, maximum=100, step=1, value=10, label="Top-k", info="Pick the next token from the top ‘k’ tokens, sorted by probability."
-                    )
-                with gr.Row(variant="panel"):    
-                    top_p = gr.components.Slider(
-                        minimum=0, maximum=1, value=0.75, label="Top-p", info="Pick from the top-k tokens based on the sum of their probabilities."
-                    )   
-                with gr.Row(variant="panel"):
-                    beams = gr.components.Slider(
-                        minimum=1, maximum=4, step=1, value=2, label="Beams", info="Most probable sequence of tokens found among 'k' beams."
-                    )
-                with gr.Row(variant="panel"):    
-                    max_tokens = gr.components.Slider(
-                        minimum=1, maximum=2000, step=1, value=512, label="Max tokens", info="Stopping criteria for the model"
-                    )
-                with gr.Row(variant="panel"):    
-                    stream = gr.components.Checkbox(
-                        label="Stream output", value=False, info="Stream the output one token at a time. Can produce inaccurate outputs"
-                    )   
+            with gr.Column(scale=6):
+                #with gr.Row(variant="panel"):    
+                temperature = gr.components.Slider(
+                    minimum=0, maximum=1, value=0.1, label="Temperature", info="Effects model diversity at the expense of straying from the context."
+                )
+                top_k = gr.components.Slider(
+                    minimum=0, maximum=100, step=1, value=10, label="Top-k", info="Pick the next token from the top ‘k’ tokens, sorted by probability."
+                )
+                top_p = gr.components.Slider(
+                    minimum=0, maximum=1, value=0.75, label="Top-p", info="Pick from the top-k tokens based on the sum of their probabilities."
+                )   
+                beams = gr.components.Slider(
+                    minimum=1, maximum=4, step=1, value=2, label="Beams", info="Most probable sequence of tokens found among 'k' beams."
+                )
+                max_tokens = gr.components.Slider(
+                    minimum=1, maximum=1024, step=8, value=1024, label="Max tokens", info="Stopping criteria for the model"
+                )
+                stream = gr.components.Checkbox(
+                    label="Stream output", value=False, info="Stream the output one token at a time. Sometimes stops early and produces inaccurate outputs"
+                )   
         with gr.Row():
             gr.Examples(
                 examples=examples,
@@ -392,8 +391,9 @@ def main(
             )        
         
         # list of inputs and outputs
-        inputs = [instruction, input, data, temperature, top_k, top_p, beams, max_tokens, stream]
-        outputs = [result_out, eval_out, template_out, raw_out]
+        inputs = [instruction, input, data, template, temperature, top_k, top_p, beams, max_tokens, stream]
+        # outputs = [result_out, eval_out, template_out, raw_out]
+        outputs = [result_out, eval_out, template_out]
         
         # clear button setup
         components_to_clear = [instruction, input, data] + outputs + [expected_result]

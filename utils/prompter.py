@@ -45,9 +45,17 @@ class Prompter(object):
             "columns": header,
             "data": table_as_dict["rows"]
         }
-
-        types = table_as_dict["types"]        
-
+        
+        if "types" not in table_as_dict.keys():        
+            table_as_dict["types"] = []
+            for i in range(len(header)):
+                c = [r[i] for r in table_as_dict["rows"]]
+                table_as_dict["types"].append("real" 
+                                    if all(v.isnumeric() for v in c) 
+                                    else "text"
+                                    )
+        types = table_as_dict["types"]
+        
         table_df = pd.read_json(
             json.dumps(table), 
             orient="split", 
@@ -59,6 +67,8 @@ class Prompter(object):
         table_df.columns = list(map(lambda x: "{}_".format(x) if str(x).isnumeric() else x, table_df.columns))
         header = table_df.columns
 
+        
+        
         for i in range(len(header)):
             if types[i] == "real" and str(table_df[header[i]].dtype) == 'object':
                 table_df[header[i]] = table_df[header[i]].apply(lambda x: x.replace(",", ""))
@@ -124,6 +134,7 @@ class Prompter(object):
         derivation_sql: Union[None, str] = None,
         response: Union[None, str] = None,
         template: Union[None, str] = None,
+        use_tools: bool = True
     ) -> str:
         # returns the full prompt from instruction and optional input
         # if a label (=response, =output) is provided, it's also appended.
@@ -156,13 +167,13 @@ class Prompter(object):
                 prompt = prompt_format.format(instruction=instruction, input=input, data=data)
             elif prompt_id == "data_prompt":
                 prompt = prompt_format.format(instruction=instruction, data=data)
-            prompt += derivation_sql
+            prompt += derivation_sql if use_tools else response
         elif template == "arithmetic":
             if prompt_id == "full_prompt":
                 prompt = prompt_format.format(instruction=instruction, input=input, data=data)
             elif prompt_id == "data_prompt":
                 prompt = prompt_format.format(instruction=instruction, data=data)
-            prompt += derivation_eval
+            prompt += derivation_eval if use_tools else response
         elif template == "table":
             if prompt_id == "full_prompt":
                 prompt = prompt_format.format(instruction=instruction, input=input, data=data)
@@ -183,6 +194,8 @@ class Prompter(object):
             prompt += response
 
         return prompt
+
+
     
     def generate_inference_prompt(
         self,

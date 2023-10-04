@@ -2,7 +2,9 @@
     "description": "This prompt template contain multiple styles to be used for different data scenarios",
     "generic": {
         "description": "Generic template",
+        "full_prompt": "Below is an instruction that describes a task, coupled with input and contextual data. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Response:\n",
         "input_prompt": "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
+        "data_prompt": "Below is an instruction that describes a task, coupled with contextual data. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
         "default_prompt": "Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Response:\n",
         "response_split": "### Response:"    
     },

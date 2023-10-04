@@ -40,10 +40,12 @@ bertscore = load("bertscore")
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d8",
+    lora_weights: str = "unwilledset/raven-13b-chat-d8-no-tools",
     inference_mode: bool = True,
     force_download: bool = False,
-    prompt_template: str = "raven_prompt_template", 
+    use_peft: bool = True,
+    use_tools: bool = False,
+    prompt_template: str = "notools_prompt_template", 
     dataset_name: str = "unwilledset/raven-data",
     dataset_subset: str = "dataset-8",
     dataset_split: str = "test",
@@ -51,7 +53,6 @@ def main(
     device_map: str = "auto",
     load_in_8bit: bool = True,
     load_in_4bit: bool = False,
-    use_peft: bool = True,
     evaluation_dir: str = "evaluation",
     temperature: float = 0.1,
     top_p: float = 0.75,
@@ -169,7 +170,7 @@ def main(
         results_df = pd.concat([results_df, pd.DataFrame(prediction_results)], ignore_index=True)
                 
         save_location = str.format(
-            f"{evaluation_dir}/{base_config['_name_or_path']}/{lora_weights}/"
+            f"{evaluation_dir}/{base_config['_name_or_path']}/{lora_weights if use_peft else 'no_peft'}/"
         )
 
         dir_name = os.path.dirname(save_location)
@@ -216,7 +217,10 @@ def main(
             s = generation_output.sequences[0]
             output = tokenizer.decode(s)
 
-            return prompter.get_response_for_evaluation(output=output, template=template)
+            return prompter.get_response_for_evaluation(
+                output=output, 
+                template=template if use_tools else "generic" # override the template if not using tools
+            )
         else:
             return {
                 "result": "not evaluated"
@@ -224,16 +228,23 @@ def main(
 
     prediction_results = []
 
-    pbar = tqdm(desc="Evaluating test samples", total=dataset.num_rows)
-    steps = 0
+    
 
     results_df = pd.DataFrame(
         columns=["source", "template", "instruction", "input", "data", "gold", "gold_eval", "pred", "pred_eval"])
 
 
     #eval_data = (dataset.map(generate_and_tokenize_prompt))
+    
+    if use_peft and use_tools:
+        filtered_dataset = dataset
+    else:    
+        filtered_dataset = dataset.filter(lambda sample: sample["template"] != "template" and sample["source"] == "alpaca")
 
-    for sample in dataset:        
+    pbar = tqdm(desc="Evaluating test samples", total=filtered_dataset.num_rows)
+    steps = 0
+
+    for sample in filtered_dataset:
         instruction = sample["instruction"]
         input = sample["input"]
         data = sample["data"]
@@ -242,11 +253,15 @@ def main(
         gold_eval = sample["derivation_eval"] if sample["derivation_eval"] else sample["derivation_sql"]
         gold = sample["output"]
 
+        # override the template to use the sentiment template if 
+        # we are not using peft
+        template = "sentiment" if not use_peft and source == "phrase-bank" else template
+
         prediction = evaluate(
             instruction=instruction, 
             input=input,
             data=data,
-            template=template,
+            template=template, 
             generation_config_dict=generation_config_dict
         )
 

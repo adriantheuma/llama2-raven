@@ -43,7 +43,7 @@ def train(
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
-    prompt_template_name: str = "raven_prompt_template",  # The prompt template to use, will default to alpaca.
+    prompt_template_name: str = "raven_prompt_template",  # The prompt template to use, will default to raven_prompt_template.
     
     # training/ model hyperparams
     # batch size = per_device_batch_size * gradient_accumulation_steps
@@ -63,6 +63,7 @@ def train(
     group_by_length: bool = False,  # faster, but produces an odd training loss curve
     load_in_8bit: bool = True,
     load_in_4bit: bool = False,
+    use_tools: bool = True,
 
     # lora hyperparams
     use_peft: bool = True,
@@ -91,7 +92,9 @@ def train(
         f"   dataset_subset: {dataset_subset}\n"
         f"   dataset_split: {dataset_split}\n"
         f"   resume_from_checkpoint: {resume_from_checkpoint or False}\n"
-        f"   prompt template: {prompt_template_name}\n\n"
+        f"   prompt template: {prompt_template_name}\n"
+        f"   use peft: {use_peft}\n"
+        f"   use tools: {use_tools}\n\n"
         
         f"Training hyperparams:\n"
         f"   per_device_train_batch_size: {per_device_train_batch_size}\n"
@@ -148,6 +151,7 @@ def train(
     def generate_and_tokenize_prompt(data_point):
         
         # generate the prompt using the selected template
+       
         full_prompt = prompter.generate_training_prompt(
             instruction=data_point["instruction"],
             input=data_point["input"],
@@ -156,8 +160,9 @@ def train(
             derivation_eval=data_point["derivation_eval"],
             derivation_sql=data_point["derivation_sql"],
             template=data_point["template"],
+            use_tools=use_tools
         )
-
+       
         # tokenize and return    
         return tokenize(full_prompt)
    
@@ -210,6 +215,11 @@ def train(
         download_mode=download_mode
     )
     
+    if use_tools:
+        filtered_dataset = dataset
+    else:    
+        filtered_dataset = dataset.filter(lambda sample: sample["template"] != "template")
+
     model.print_trainable_parameters()  
     
     # get the tokeniser from the model
@@ -221,10 +231,10 @@ def train(
 
     if val_set_size > 0:        
         if val_set_size < 1:
-            val_set_size = int(dataset.num_rows * val_set_size)
+            val_set_size = int(filtered_dataset.num_rows * val_set_size)
 
         # split the dataset into training and validation
-        train_val = dataset.train_test_split(
+        train_val = filtered_dataset.train_test_split(
             test_size=val_set_size, shuffle=True, seed=42
         )
 
@@ -235,7 +245,7 @@ def train(
             train_val["test"].shuffle().map(generate_and_tokenize_prompt)
         )
     else:
-        train_data = dataset["train"].shuffle().map(generate_and_tokenize_prompt)
+        train_data = filtered_dataset["train"].shuffle().map(generate_and_tokenize_prompt)
         val_data = None
 
     print(f"Length of train dataset before select: {train_data.num_rows}")
