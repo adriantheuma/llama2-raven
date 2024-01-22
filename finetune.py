@@ -38,6 +38,7 @@ def train(
     # data params
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     dataset_name: str = "adriantheuma/raven-data",
+    dataset_split: str = "train",
     download_mode: str = "force_redownload", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
@@ -87,6 +88,7 @@ def train(
         f"Data params:\n"
         f"   base_model: {base_model}\n"
         f"   data_path: {dataset_name}\n"
+        f"   data_split: {dataset_split}\n"
         f"   resume_from_checkpoint: {resume_from_checkpoint or False}\n"
         f"   prompt template: {prompt_template_name}\n"
         f"   use peft: {use_peft}\n"
@@ -206,6 +208,7 @@ def train(
     # Load the dataset
     dataset = load_dataset(
         path=dataset_name, 
+        split=dataset_split,
         download_mode=download_mode
     )
     
