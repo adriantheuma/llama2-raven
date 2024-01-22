@@ -40,14 +40,14 @@ bertscore = load("bertscore")
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d8-no-tools",
+    lora_weights: str = "adriantheuma/raven-lora",
     inference_mode: bool = True,
     force_download: bool = False,
     use_peft: bool = True,
-    use_tools: bool = False,
-    prompt_template: str = "notools_prompt_template", 
-    dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-8",
+    use_tools: bool = True,
+    prompt_template: str = "raven_prompt_template", 
+    dataset_name: str = "adriantheuma/raven-data",
+    # dataset_subset: str = "dataset-10",
     dataset_split: str = "test",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     device_map: str = "auto",
@@ -63,8 +63,6 @@ def main(
     add_eos_token: bool = True,
     max_length: int = 1024,
 ):
-   
-
     if load_in_8bit and load_in_4bit:
         raise ValueError("You can't load the model in 8 bits and 4 bits at the same time")
     elif load_in_8bit or load_in_4bit:
@@ -130,13 +128,9 @@ def main(
     # Load the dataset
     dataset = load_dataset(
         path=dataset_name, 
-        name=dataset_subset,        
         split=dataset_split,
         download_mode=download_mode
     )
-
-    # dataset = dataset.select(range(0,15))
-
 
     def tokenize(prompt):
         result = tokenizer(
@@ -163,8 +157,6 @@ def main(
 
         # tokenize and return    
         return tokenize(prompt)
-
-
 
     def save_evaluation_results(prediction_results, results_df, console_output: bool = False):
         results_df = pd.concat([results_df, pd.DataFrame(prediction_results)], ignore_index=True)
@@ -257,6 +249,17 @@ def main(
         # we are not using peft
         template = "sentiment" if not use_peft and source == "phrase-bank" else template
 
+        if use_tools: # determine the most appropriate template
+            template_pred = evaluate(
+                instruction=instruction, 
+                input=input,
+                data=data,
+                template="template", 
+                generation_config_dict=generation_config_dict
+            )
+            if template_pred["result"] in ["table", "arithmetic", "script", "generic"]:
+                template = template_pred["result"]
+
         prediction = evaluate(
             instruction=instruction, 
             input=input,
@@ -264,7 +267,7 @@ def main(
             template=template, 
             generation_config_dict=generation_config_dict
         )
-
+        
         if prediction["result"] != "not evaluated":
             pred = prediction["result"]
             pred_eval = prediction["eval"]

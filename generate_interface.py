@@ -34,9 +34,8 @@ except:  # noqa: E722
 def main(
     load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
-    lora_weights: str = "unwilledset/raven-13b-chat-d8",
-    dataset_name: str = "unwilledset/raven-data",
-    dataset_subset: str = "dataset-8",
+    lora_weights: str = "adriantheuma/raven-lora",
+    dataset_name: str = "adriantheuma/raven-data",
     dataset_split: str = "test",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
 
@@ -256,7 +255,6 @@ def main(
     if load_model:
         dataset = load_dataset(
             path=dataset_name, 
-            name=dataset_subset,        
             split=dataset_split,
             download_mode=download_mode
         )
