@@ -1,6 +1,6 @@
 ## Prompt templates
 
-The template/ directory contains template styles for the prompts used to fine-tune LoRA models.
+The templates/ directory contains template styles for the prompts used to fine-tune the Raven LoRA models.
 
 ### Format
 
