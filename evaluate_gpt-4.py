@@ -28,7 +28,7 @@ from tenacity import (
 from utils.prompter import Prompter
 
 # Set openai.api_key to the OPENAI environment variable
-openai.api_key = "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"
+openai.api_key = ""
 
 def main(
     use_tools: bool = False,
