@@ -32,104 +32,70 @@ except:  # noqa: E722
 
 
 def main(
-    load_8bit: bool = True,
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     lora_weights: str = "adriantheuma/raven-lora",
     dataset_name: str = "adriantheuma/raven-data",
     dataset_split: str = "test",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
-
     force_download: bool = False,
-    lora_weights_version: str = "",
     prompt_template: str = "raven_prompt_template",  # The prompt template to use, will default to alpaca.
-    server_name: str = "0.0.0.0",  # Allows to listen on all interfaces by providing '0.
-    share_gradio: bool = False,
     device_map: str = "auto",
     load_in_8bit: bool = True,
     load_in_4bit: bool = False,
     use_peft: bool = True,
-    load_model: bool = True
 ):
     prompter = Prompter(prompt_template)
     
-    if load_model:
-        base_model = base_model or os.environ.get("BASE_MODEL", "")
-        assert (
-            base_model
-        ), "Please specify a --base_model, e.g. --base_model='huggyllama/llama-7b'"
+    base_model = base_model or os.environ.get("BASE_MODEL", "")
+    assert (
+        base_model
+    ), "Please specify a --base_model, e.g. --base_model='huggyllama/llama-7b'"
 
 
-        if load_in_8bit and load_in_4bit:
-            raise ValueError("You can't load the model in 8 bits and 4 bits at the same time")
-        elif load_in_8bit or load_in_4bit:
-            quantization_config = BitsAndBytesConfig(
-                load_in_8bit=load_in_8bit, load_in_4bit=load_in_4bit
-            )
-            # This means: fit the entire model on the GPU:0
-            device_map = {"": 0}
-            torch_dtype = torch.bfloat16
-        else:
-            device_map = None
-            quantization_config = None
-            torch_dtype = None
+    if load_in_8bit and load_in_4bit:
+        raise ValueError("You can't load the model in 8 bits and 4 bits at the same time")
+    elif load_in_8bit or load_in_4bit:
+        quantization_config = BitsAndBytesConfig(
+            load_in_8bit=load_in_8bit, load_in_4bit=load_in_4bit
+        )
+        # This means: fit the entire model on the GPU:0
+        device_map = {"": 0}
+        torch_dtype = torch.bfloat16
+    else:
+        device_map = None
+        quantization_config = None
+        torch_dtype = None
 
-        tokenizer = AutoTokenizer.from_pretrained(base_model)
-        
-        model = AutoModelForCausalLM.from_pretrained(
-            base_model,
-            quantization_config=quantization_config,
-            device_map=device_map,
-            trust_remote_code=True,
-            torch_dtype=torch_dtype,
-            use_auth_token=True,
-        )   
-
-        if use_peft:
-            model = PeftModel.from_pretrained(
-                model,
-                lora_weights,
-                torch_dtype=torch.float16,
-                device_map=device_map,
-                force_download=force_download,
-            )
+    tokenizer = AutoTokenizer.from_pretrained(base_model)
     
-        # unwind broken decapoda-research config
-        model.config.pad_token_id = tokenizer.pad_token_id = 0  # unk
-        model.config.bos_token_id = 1
-        model.config.eos_token_id = 2
+    model = AutoModelForCausalLM.from_pretrained(
+        base_model,
+        quantization_config=quantization_config,
+        device_map=device_map,
+        trust_remote_code=True,
+        torch_dtype=torch_dtype,
+        use_auth_token=True,
+    )   
 
-        if not load_8bit:
-            model.half()  # seems to fix bugs for some users.
+    if use_peft:
+        model = PeftModel.from_pretrained(
+            model,
+            lora_weights,
+            torch_dtype=torch.float16,
+            device_map=device_map,
+            force_download=force_download,
+        )
 
-        model.eval()
-        model = torch.compile(model)
+    # unwind broken decapoda-research config
+    model.config.pad_token_id = tokenizer.pad_token_id = 0  # unk
+    model.config.bos_token_id = 1
+    model.config.eos_token_id = 2
 
-    def test_prompter(
-        instruction,
-        input=None,
-        data=None,
-        temperature=0.1,
-        top_p=0.75,
-        top_k=40,
-        num_beams=4,
-        max_new_tokens=128,
-        stream_output=False,
-        **kwargs,
-    ):
-        prompt = prompter.generate_prompt(instruction=instruction, input=input, data=data)
-        test_output = [
-            prompt,
-            "### Response: this is the model's response",
-             #"### SQL: SELECT ([Stadium]) FROM data_table WHERE LOWER([Score]) = LOWER('66-20')"
-             "### Eval: 7>4"
-        ]
+    if not load_in_8bit:
+        model.half()  # seems to fix bugs for some users.
 
-        output = "\n\n".join(test_output)
-
-
-        response, eval, result = prompter.get_response(output)
-        yield (response, eval, result)
-
+    model.eval()
+    model = torch.compile(model)
 
 
     def which_prompt(
@@ -252,20 +218,17 @@ def main(
 
     # Load the test dataset
     examples = []
-    if load_model:
-        dataset = load_dataset(
-            path=dataset_name, 
-            split=dataset_split,
-            download_mode=download_mode
-        )
+    dataset = load_dataset(
+        path=dataset_name, 
+        split=dataset_split,
+        download_mode=download_mode
+    )
 
-        dataset_df = dataset.to_pandas()
-        alpaca_df = dataset_df[(dataset_df["source"] == "alpaca") & (dataset_df["template"] != "template")]
+    dataset_df = dataset.to_pandas()
 
-        
-        examples_iloc = [9, 10, 11, 14, 15, 20, 21, 22, 26, 5125, 5134, 5137]
-        examples_columns = ["instruction", "input", "data", "output"]
-        examples = dataset_df[examples_columns].iloc[examples_iloc].values.tolist()
+    examples_iloc = [9, 10, 11, 14, 15, 20, 21, 22, 26, 5125, 5134, 5137]
+    examples_columns = ["instruction", "input", "data", "output"]
+    examples = dataset_df[examples_columns].iloc[examples_iloc].values.tolist()
 
 
     demo = gr.Blocks(
@@ -409,7 +372,6 @@ def main(
             preprocess=False,
             show_progress="full"
         )
-        
 
     demo.queue().launch(
         server_name="0.0.0.0", 

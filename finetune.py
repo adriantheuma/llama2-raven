@@ -38,7 +38,6 @@ def train(
     # data params
     base_model: str = "meta-llama/Llama-2-13b-chat-hf",
     dataset_name: str = "adriantheuma/raven-data",
-    dataset_split: str = "train",
     download_mode: str = "force_redownload", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     output_dir: str = "weights",
     logging_dir: str = "logs",
@@ -88,7 +87,6 @@ def train(
         f"Data params:\n"
         f"   base_model: {base_model}\n"
         f"   data_path: {dataset_name}\n"
-        f"   data_split: {dataset_split}\n"
         f"   resume_from_checkpoint: {resume_from_checkpoint or False}\n"
         f"   prompt template: {prompt_template_name}\n"
         f"   use peft: {use_peft}\n"
@@ -208,14 +206,17 @@ def train(
     # Load the dataset
     dataset = load_dataset(
         path=dataset_name, 
-        split=dataset_split,
+        # split=dataset_split,
         download_mode=download_mode
     )
     
     if use_tools:
-        filtered_dataset = dataset
+        train_dateset = dataset["train"]
+        val_dateset = dataset["val"]
     else:    
-        filtered_dataset = dataset.filter(lambda sample: sample["template"] != "template")
+        train_dateset = dataset["train"].filter(lambda sample: sample["template"] != "template")
+        val_dateset = dataset["val"].filter(lambda sample: sample["template"] != "template")
+        
 
     model.print_trainable_parameters()  
     
@@ -226,48 +227,8 @@ def train(
     tokenizer.padding_side = "left"  # Allow batched inference
     tokenizer.add_eos_token = add_eos_token
 
-    if val_set_size > 0:        
-        if val_set_size < 1:
-            val_set_size = int(filtered_dataset.num_rows * val_set_size)
-
-        # split the dataset into training and validation
-        train_val = filtered_dataset.train_test_split(
-            test_size=val_set_size, shuffle=True, seed=42
-        )
-
-        train_data = (
-            train_val["train"].shuffle().map(generate_and_tokenize_prompt)
-        )
-        val_data = (
-            train_val["test"].shuffle().map(generate_and_tokenize_prompt)
-        )
-    else:
-        train_data = filtered_dataset["train"].shuffle().map(generate_and_tokenize_prompt)
-        val_data = None
-
-    print(f"Length of train dataset before select: {train_data.num_rows}")
-    # get all the lengths and flatten
-    lengths = [item for sublist in train_data["length"] for item in sublist]
-    # select only those less than 1024 in length after tokenisation
-    idx = (np.asarray(lengths) < 1024).nonzero()[0]
-    train_data = train_data.select(idx)
-    print(f"Length of train dataset after select: {train_data.num_rows}")
-
-    print(f"Length of validation dataset before select: {val_data.num_rows}")
-    # get all the lengths and flatten
-    lengths = [item for sublist in val_data["length"] for item in sublist]
-    # select only those less than 1024 in length after tokenisation
-    idx = (np.asarray(lengths) < 1024).nonzero()[0]
-    val_data = val_data.select(idx)
-    print(f"Length of validation dataset after select: {val_data.num_rows}")
-
-    # lengths = []
-    # for data in train_data:
-    #     lengths.append(len(data["input_ids"]))
-
-    # plt.hist(lengths, bins=50)
-    # plt.gca().set(title='Frequency Histogram', ylabel='Frequency')
-    # plt.show()
+    train_data = (train_dateset.shuffle().map(generate_and_tokenize_prompt))
+    val_data = (val_dateset.shuffle().map(generate_and_tokenize_prompt))    
 
     training_args = TrainingArguments(
         per_device_train_batch_size=per_device_train_batch_size,
