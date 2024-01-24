@@ -34,7 +34,8 @@ This repository is based on our publication *Equipping Language Models with Tool
 
 ## Data & Templates
 
-For data that was used to train the LoRA weights visit the [dataset](https://huggingface.co/datasets/adriantheuma/raven-data) repository.
+For data that was used to train the LoRA weights visit the [dataset](https://huggingface.co/datasets/adriantheuma/raven-data) repository. It is also possible to experiment with different prompt templates. Simply copy one of the existing templates in the templates/ folder and modify with your own prompts. More details can be found [here](/templates/README.md). 
+
 
 ## Setup
 
