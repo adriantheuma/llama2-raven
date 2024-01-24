@@ -1,35 +1,3 @@
-{
-    "description": "This prompt template contain multiple styles to be used for different data scenarios",
-    "generic": {
-        "description": "Generic template",
-        "full_prompt": "Below is an instruction that describes a task, coupled with input and contextual data. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Response:\n",
-        "input_prompt": "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
-        "data_prompt": "Below is an instruction that describes a task, coupled with contextual data. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
-        "default_prompt": "Below is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\n{instruction}\n\n### Response:\n",
-        "response_split": "### Response:"    
-    },
-    "sentiment": {
-        "description": "Sentiment template",
-        "input_prompt": "Below is an instruction that describes a task, paired with an input that provides further context. Write a response that appropriately completes the request. Output the answer only with no explanation from one of positive, negative or neutral.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
-        "response_split": "### Response:"    
-    },
-    "script": {
-        "description": "SQL template",
-        "full_prompt": "Below is an instruction that describes a task, coupled with input and contextual data. Write a response that appropriately completes the request. Output the answer only with no explanation.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Response:\n",
-        "data_prompt": "Below is an instruction that describes a task, coupled with contextual data. Write a response that appropriately completes the request. Output the answer only with no explanation.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
-        "response_split": "### Response:"
-    },
-    "arithmetic": {
-        "description": "Arithmetic template",
-        "full_prompt": "Below is an instruction that describes a task, coupled with input and data providing additional context. Write a response that appropriately completes the request. Output the answer only with no explanation.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Response:\n",
-        "data_prompt": "Below is an instruction that describes a task, coupled with data providing additional context. Write a response that appropriately completes the request. Output the answer only with no explanation.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
-        "response_split": "### Response:"
-    },
-    "table": {
-        "description": "Generic table template",
-        "full_prompt": "Here is a instruction detailing a task, accompanied by input and data providing additional context. Provide a suitable reply that effectively fulfills the inquiry. Output the answer only with no explanation.\n\n### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Data:\n{data}\n\n### Response:\n",
-        "input_prompt": "Here is a instruction detailing a task, accompanied by input providing additional information. Provide a suitable reply that effectively fulfills the inquiry. Output the answer only with no explanation.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
-        "data_prompt": "Here is a instruction detailing a task, accompanied by data providing additional context. Provide a suitable reply that effectively fulfills the inquiry. Output the answer only with no explanation.\n\n### Instruction:\n{instruction}\n\n### Data:\n{data}\n\n### Response:\n",
-        "response_split": "### Response:"
-    }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:fda6f1b81608a3bc694735afacd6034f68d9039c515e4e989d76bb69f45dfe2e
+size 4140

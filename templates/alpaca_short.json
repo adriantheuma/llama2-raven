@@ -1,7 +1,3 @@
-{
-    "description": "A shorter template to experiment with.",
-    "prompt_input": "### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:\n",
-    "prompt_no_input": "### Instruction:\n{instruction}\n\n### Response:\n",
-    "response_split": "### Response:",    
-    "derivation_split": "### Derivation:"    
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8b98b563f566da15a09e03e831cf72cafdbd044c5c7ccef619ba5ce0517a3d6a
+size 328

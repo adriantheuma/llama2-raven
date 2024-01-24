@@ -1,0 +1,55 @@
+[1mNAME[0m
+    generate_interface.py
+
+[1mSYNOPSIS[0m
+    generate_interface.py <flags>
+
+[1mFLAGS[0m
+    --load_8bit=[4mLOAD_8BIT[0m
+        Type: bool
+        Default: True
+    -b, --base_model=[4mBASE_MODEL[0m
+        Type: str
+        Default: 'meta-llama/Llama-2...
+    --lora_weights=[4mLORA_WEIGHTS[0m
+        Type: str
+        Default: 'adriantheuma/raven-lora'
+    --dataset_name=[4mDATASET_NAME[0m
+        Type: str
+        Default: 'adriantheuma/raven-data'
+    --dataset_split=[4mDATASET_SPLIT[0m
+        Type: str
+        Default: 'test'
+    --download_mode=[4mDOWNLOAD_MODE[0m
+        Type: str
+        Default: 'reuse_cache_if_exists'
+    -f, --force_download=[4mFORCE_DOWNLOAD[0m
+        Type: bool
+        Default: False
+    --lora_weights_version=[4mLORA_WEIGHTS_VERSION[0m
+        Type: str
+        Default: ''
+    -p, --prompt_template=[4mPROMPT_TEMPLATE[0m
+        Type: str
+        Default: 'raven_prompt_template'
+    --server_name=[4mSERVER_NAME[0m
+        Type: str
+        Default: '0.0.0.0'
+    --share_gradio=[4mSHARE_GRADIO[0m
+        Type: bool
+        Default: False
+    --device_map=[4mDEVICE_MAP[0m
+        Type: str
+        Default: 'auto'
+    --load_in_8bit=[4mLOAD_IN_8BIT[0m
+        Type: bool
+        Default: True
+    --load_in_4bit=[4mLOAD_IN_4BIT[0m
+        Type: bool
+        Default: False
+    -u, --use_peft=[4mUSE_PEFT[0m
+        Type: bool
+        Default: True
+    --load_model=[4mLOAD_MODEL[0m
+        Type: bool
+        Default: True

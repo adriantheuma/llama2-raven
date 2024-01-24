@@ -1,6 +1,3 @@
-{
-    "description": "French template, used by Vigogne for finetuning.",
-    "prompt_input": "Ci-dessous se trouve une instruction qui décrit une tâche, associée à une entrée qui fournit un contexte supplémentaire. Écrivez une réponse qui complète correctement la demande.\n\n### Instruction:\n{instruction}\n\n### Entrée:\n{input}\n\n### Réponse:\n",
-    "prompt_no_input": "Ci-dessous se trouve une instruction qui décrit une tâche. Écrivez une réponse qui complète correctement la demande.\n\n### Instruction:\n{instruction}\n\n### Réponse:\n",
-    "response_split": "### Réponse:"
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:0e53ba20125d9c6e818b4380719ee721835cc8fdae0c107a677fd978ed3a016e
+size 605
