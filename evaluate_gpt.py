@@ -27,14 +27,13 @@ from tenacity import (
 
 from utils.prompter import Prompter
 
-# Set openai.api_key to the OPENAI environment variable
-openai.api_key = ""
+
 
 def main(
+    openai_api_key: str = "",
     use_tools: bool = False,
     prompt_template: str = "cot_prompt_template", # cot_prompt_template, raven_prompt_template, notools_prompt_template
     dataset_name: str = "adriantheuma/raven-data",
-    dataset_subset: str = "dataset-10",
     download_mode: str = "reuse_cache_if_exists", # force_redownload, reuse_dataset_if_exists, reuse_cache_if_exists 
     evaluation_dir: str = "evaluation",
     evaluation_subdir: str = "cot", # zero-shot-cot, tools, notools
@@ -48,11 +47,12 @@ def main(
     model="gpt-3.5-turbo",
     max_tokens=4096
 ):
-   
+    # Set openai.api_key to the OPENAI environment variable
+    openai.api_key = openai_api_key
+
     prompter = Prompter(prompt_template)
     encoding = tiktoken.encoding_for_model(model)
     
-  
     generation_config_dict = {
         "temperature": temperature,
         "top_p": top_p,
@@ -65,7 +65,6 @@ def main(
     # Load the dataset
     dataset = load_dataset(
         path=dataset_name, 
-        name=dataset_subset,
         download_mode=download_mode
     )
 
