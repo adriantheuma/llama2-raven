@@ -22,11 +22,11 @@
 This repository is based on our publication *Equipping Language Models with Tool Use Capability for Tabular Data Analysis in Finance* ([PDF](https://browse.arxiv.org/pdf/00000.pdf)). It contains code to fine-tune the base [Llama 2 13B Chat](https://huggingface.co/meta-llama/Llama-2-13b) using LoRA with a curated table-and-text and sentiment analysis dataset in the financial domain. It also includes a demo gradio user interface to interact with the model. If you use this code or data in your work, please cite:
 
 ```
-@misc{theuma2024raven,
+@misc{theuma2024equipping,
       title={Equipping Language Models with Tool Use Capability for Tabular Data Analysis in Finance}, 
       author={Adrian Theuma and Ehsan Shareghi},
-      year={2023},
-      eprint={},
+      year={2024},
+      eprint={2401.15328},
       archivePrefix={arXiv},
       primaryClass={cs.CL}
 }

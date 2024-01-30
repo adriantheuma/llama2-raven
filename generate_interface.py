@@ -228,7 +228,8 @@ def main(
 
     examples_iloc = [9, 10, 11, 14, 15, 20, 21, 22, 26, 5125, 5134, 5137]
     examples_columns = ["instruction", "input", "data", "output"]
-    examples = dataset_df[examples_columns].iloc[examples_iloc].values.tolist()
+    # examples = dataset_df[examples_columns].iloc[examples_iloc].values.tolist()
+    examples = dataset_df[examples_columns].values.tolist()
 
 
     demo = gr.Blocks(
