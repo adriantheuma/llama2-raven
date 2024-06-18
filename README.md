@@ -19,16 +19,23 @@
 
 ## Overview
 
-This repository is based on our publication *Equipping Language Models with Tool Use Capability for Tabular Data Analysis in Finance* ([PDF](https://arxiv.org/abs/2401.15328)). It contains code to fine-tune the base [Llama 2 13B Chat](https://huggingface.co/meta-llama/Llama-2-13b) using LoRA with a curated table-and-text and sentiment analysis dataset in the financial domain. It also includes a demo gradio user interface to interact with the model. If you use this code or data in your work, please cite:
+This repository is based on our publication *Equipping Language Models with Tool Use Capability for Tabular Data Analysis in Finance* ([PDF](https://aclanthology.org/2024.eacl-short.10.pdf)). It contains code to fine-tune the base [Llama 2 13B Chat](https://huggingface.co/meta-llama/Llama-2-13b) using LoRA with a curated table-and-text and sentiment analysis dataset in the financial domain. It also includes a demo gradio user interface to interact with the model. If you use this code or data in your work, please cite:
 
 ```
-@misc{theuma2024equipping,
-      title={Equipping Language Models with Tool Use Capability for Tabular Data Analysis in Finance}, 
-      author={Adrian Theuma and Ehsan Shareghi},
-      year={2024},
-      eprint={2401.15328},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@inproceedings{theuma-shareghi-2024-equipping,
+    title = "Equipping Language Models with Tool Use Capability for Tabular Data Analysis in Finance",
+    author = "Theuma, Adrian  and
+      Shareghi, Ehsan",
+    editor = "Graham, Yvette  and
+      Purver, Matthew",
+    booktitle = "Proceedings of the 18th Conference of the European Chapter of the Association for Computational Linguistics (Volume 2: Short Papers)",
+    month = mar,
+    year = "2024",
+    address = "St. Julian{'}s, Malta",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.eacl-short.10",
+    pages = "90--103",
+    abstract = "Large language models (LLMs) have exhibited an array of reasoning capabilities but face challenges like error propagation and hallucination, particularly in specialised areas like finance, where data is heterogeneous, and precision is paramount. We explore the potential of language model augmentation with external tools to mitigate these limitations and offload certain reasoning steps to external tools that are more suited for the task, instead of solely depending on the LLM{'}s inherent abilities. More concretely, using financial domain question answering datasets, we apply supervised finetuning on a LLAMA-2 13B CHAT model to act both as a task router and task solver. The task router dynamically directs a question to either be answered internally by the LLM or externally via the right tool from the tool set. Our tool-equipped SFT model, RAVEN, demonstrates an improvement of 35.2{\%} and 5.06{\%} over the base model and SFT-only baselines, respectively, and is highly competitive with strong GPT-3.5 results. To the best of our knowledge, our work is the first that investigates tool augmentation of language models for the finance domain.",
 }
 ```
 
